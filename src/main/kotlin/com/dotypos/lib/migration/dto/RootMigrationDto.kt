@@ -46,6 +46,11 @@ data class RootMigrationDto(
      * Sorted list of products, This order is also preserved in categories.
      */
     val products: List<ProductMigrationDto>,
+
+    /**
+     * List of product ingredients used for stock deduction.
+     */
+    val ingredients: List<ProductIngredientMigrationDto>,
 ) {
 
     init {
