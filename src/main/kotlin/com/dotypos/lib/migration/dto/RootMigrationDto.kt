@@ -1,0 +1,96 @@
+@file:UseSerializers(
+    BigDecimalSerializer::class,
+    DateSerializer::class
+)
+
+package com.dotypos.lib.migration.dto
+
+import com.dotypos.lib.migration.dto.entity.*
+import com.dotypos.lib.migration.serialization.BigDecimalSerializer
+import com.dotypos.lib.migration.serialization.DateSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import org.valiktor.functions.hasSize
+import org.valiktor.functions.isLessThan
+import org.valiktor.functions.isNotBlank
+import org.valiktor.functions.isNotEmpty
+import org.valiktor.validate
+import java.util.*
+
+@Serializable
+data class RootMigrationDto(
+    val metadata: Metadata,
+
+    /**
+     * Employees
+     */
+    val employees: Set<EmployeeMigrationDto>,
+
+    /**
+     * Sellers
+     */
+    val sellers: Set<SellerMigrationDto>,
+
+    /**
+     * Sorted list of courses available
+     */
+    val courses: List<CourseMigrationDto>,
+
+    /**
+     * Sorted list of sale categories
+     */
+    val categories: List<CategoryMigrationDto>,
+
+    /**
+     * Sorted list of products, This order is also preserved in categories.
+     */
+    val products: List<ProductMigrationDto>,
+) {
+
+    init {
+        // TODO: Validate all entities for unique ID
+        // TODO: Validate all related entities for related entity existence
+    }
+
+    @Serializable
+    data class Metadata(
+        /**
+         * Unique identification of migration file starting with migration prefix string
+         */
+        @SerialName("migrationId")
+        val migrationId: String,
+
+        /**
+         * Date of migration file creation
+         */
+        @SerialName("created")
+        val created: Date,
+
+        @SerialName("pos")
+        val pos: PosMetadata
+    ) {
+        init {
+            validate(this) {
+                validate(Metadata::migrationId).hasSize(min = 10)
+                validate(Metadata::created).isLessThan(Date())
+            }
+        }
+
+    }
+
+    @Serializable
+    data class PosMetadata(
+        /**
+         * Foreign POS id - used for subsequent migrations
+         */
+        @SerialName("id")
+        val id: String
+    ) {
+        init {
+            validate(this) {
+                validate(PosMetadata::id).isNotBlank()
+            }
+        }
+    }
+}
