@@ -38,12 +38,6 @@ data class PrinterMigrationDto(
     val encoding: String = DEFAULT_ENCODING,
 
     /**
-     * Locale to be used for printouts. [DEFAULT_PRINT_LOCALE] to use current locale of device.
-     */
-    @SerialName("locale")
-    val locale: String = DEFAULT_PRINT_LOCALE,
-
-    /**
      * Number of characters to be used when printing with Font A
      */
     @SerialName("charactersFontA")
@@ -78,6 +72,12 @@ data class PrinterMigrationDto(
      */
     @SerialName("drawer")
     val withDrawer: Boolean,
+
+    /**
+     * List of print tasks of the printer
+     */
+    @SerialName("tasks")
+    val tasks: List<PrintTaskMigrationDto>,
 
     @SerialName(Deletable.SERIAL_NAME)
     override val isDeleted: Boolean,
