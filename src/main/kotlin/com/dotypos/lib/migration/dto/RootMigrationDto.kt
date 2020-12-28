@@ -25,32 +25,44 @@ data class RootMigrationDto(
     /**
      * Employees
      */
+    @SerialName("employees")
     val employees: Set<EmployeeMigrationDto>,
 
     /**
      * Sellers
      */
+    @SerialName("sellers")
     val sellers: Set<SellerMigrationDto>,
 
     /**
      * Sorted list of courses available
      */
+    @SerialName("courses")
     val courses: List<CourseMigrationDto>,
 
     /**
      * Sorted list of sale categories
      */
+    @SerialName("categories")
     val categories: List<CategoryMigrationDto>,
 
     /**
      * Sorted list of products, This order is also preserved in categories.
      */
+    @SerialName("products")
     val products: List<ProductMigrationDto>,
 
     /**
      * List of product ingredients used for stock deduction.
      */
+    @SerialName("ingredients")
     val ingredients: List<ProductIngredientMigrationDto>,
+
+    /**
+     * List of printers and print tasks
+     */
+    @SerialName("printers")
+    val printers: List<PrinterMigrationDto>,
 ) {
 
     init {
