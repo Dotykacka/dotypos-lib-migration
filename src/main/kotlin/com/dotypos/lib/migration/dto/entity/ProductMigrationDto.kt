@@ -7,7 +7,7 @@ package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
-import com.dotypos.lib.migration.dto.enumerate.ProductFeature
+import com.dotypos.lib.migration.dto.enumerate.feature.ProductFeature
 import com.dotypos.lib.migration.dto.enumerate.ProductStockOverdraftBehavior
 import com.dotypos.lib.migration.dto.validation.isValidId
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer

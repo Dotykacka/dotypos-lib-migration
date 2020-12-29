@@ -5,6 +5,7 @@
 
 package com.dotypos.lib.migration.dto
 
+import com.dotypos.lib.migration.dto.config.PosConfigurationDto
 import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
@@ -21,6 +22,12 @@ import java.util.*
 @Serializable
 data class PosMigrationDto(
     val metadata: Metadata,
+
+    /**
+     * Configuration of migrated POS
+     */
+    @SerialName("posConfiguration")
+    val posConfiguration: PosConfigurationDto,
 
     /**
      * Employees

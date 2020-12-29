@@ -1,4 +1,4 @@
-package com.dotypos.lib.migration.dto.enumerate
+package com.dotypos.lib.migration.dto.enumerate.feature
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
