@@ -106,6 +106,12 @@ data class CustomerMigrationDto(
     @SerialName(WithTags.SERIAL_NAME)
     override val tags: List<String>,
 
+    /**
+     * ID of [discount group][CustomerDiscountGroupMigrationDto]
+     */
+    @SerialName("discountGroupId")
+    val discountGroupId: Long?,
+
     @SerialName(SellerRelated.SERIALIZED_NAME)
     override val sellerId: Long?,
 

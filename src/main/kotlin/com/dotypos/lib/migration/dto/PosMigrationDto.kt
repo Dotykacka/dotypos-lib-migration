@@ -19,7 +19,7 @@ import org.valiktor.validate
 import java.util.*
 
 @Serializable
-data class RootMigrationDto(
+data class PosMigrationDto(
     val metadata: Metadata,
 
     /**
@@ -47,16 +47,22 @@ data class RootMigrationDto(
     val categories: List<CategoryMigrationDto>,
 
     /**
-     * Sorted list of products, This order is also preserved in categories.
+     * Sorted list of products - order is also preserved in categories
      */
     @SerialName("products")
     val products: List<ProductMigrationDto>,
 
     /**
-     * List of product ingredients used for stock deduction.
+     * List of product ingredients used for stock deduction
      */
     @SerialName("ingredients")
     val ingredients: List<ProductIngredientMigrationDto>,
+
+    /**
+     * List of customer discount groups definitions
+     */
+    @SerialName("customerDiscountGroups")
+    val customerDiscountGroups: List<CustomerDiscountGroupMigrationDto>,
 
     /**
      * List of customers
