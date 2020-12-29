@@ -59,6 +59,12 @@ data class RootMigrationDto(
     val ingredients: List<ProductIngredientMigrationDto>,
 
     /**
+     * List of customers
+     */
+    @SerialName("customers")
+    val customers: List<CustomerMigrationDto>,
+
+    /**
      * List of printers and print tasks
      */
     @SerialName("printers")
