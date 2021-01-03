@@ -4,10 +4,12 @@ plugins {
     kotlin("jvm") version "1.4.21"
     kotlin("plugin.serialization") version "1.4.21"
     id("org.jetbrains.dokka") version "1.4.20"
+    id("java-library")
+    id("maven-publish")
 }
 
 group = "com.dotypos.lib.migration"
-version = "1.0-SNAPSHOT"
+version = "0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -29,10 +31,58 @@ dependencies {
     implementation(kotlin("script-runtime"))
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version
+            )
+        )
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "com.dotypos.lib.migration"
+            artifactId = "lib-migration"
+            from(components["java"])
+            version = project.version.toString()
+
+            pom {
+                name.set("Dotypos Data Migration Library")
+                developers {
+                    developer {
+                        id.set("tomas.sustek")
+                        name.set("Tomáš Šůstek")
+                        email.set("tomas.sustek@dotykacka.cz")
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri("https://dotypos-000053698179.d.codeartifact.eu-west-1.amazonaws.com/maven/lib-data-migration/")
+            credentials {
+                username = "aws"
+                password = System.getenv("CODEARTIFACT_AUTH_TOKEN")
+            }
+        }
+    }
 }
