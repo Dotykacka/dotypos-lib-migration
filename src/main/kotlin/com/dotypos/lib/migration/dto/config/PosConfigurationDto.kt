@@ -81,6 +81,12 @@ data class PosConfigurationDto(
     val sendReceiptsByEmail: Boolean,
 
     /**
+     * Configuration of document numbering format
+     */
+    @SerialName("documentNumbering")
+    val documentNumbering: DocumentNumberingConfiguration,
+
+    /**
      * List of FiscalizationConfigurations (each for every seller)
      */
     @SerialName("czFiscalizationConfigurations")
@@ -106,5 +112,26 @@ data class PosConfigurationDto(
          */
         @SerialName("total")
         val total: Int
+    )
+
+    @Serializable
+    data class DocumentNumberingConfiguration(
+        /**
+         * Numbering format of receipts
+         */
+        @SerialName("receiptFormat")
+        val receiptFormat: String,
+
+        /**
+         * Numbering format of invoices, [receiptFormat] is used if `null`
+         */
+        @SerialName("invoiceFormat")
+        val invoiceFormat: String?,
+
+        /**
+         * Numbering format of cancellation and corrective invoices, [invoiceFormat] is used if `null`
+         */
+        @SerialName("cancellationInvoiceFormat")
+        val cancellationInvoiceFormat: String?,
     )
 }
