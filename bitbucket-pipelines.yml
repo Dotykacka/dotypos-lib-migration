@@ -7,6 +7,7 @@ pipelines:
           - step:
               name: Build & tests
               caches:
+                - gradle-wrapper
                 - gradle
               script:
                 - sh ./gradlew build
@@ -18,7 +19,12 @@ pipelines:
           name: Publish build artifact
           deployment: Production artifact
           caches:
+            - gradle-wrapper
             - gradle
           script:
             - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
             - sh ./gradlew jar publish
+
+definitions:
+  caches:
+    gradle-wrapper: ~/.gradle/wrapper
