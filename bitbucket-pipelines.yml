@@ -8,10 +8,16 @@ pipelines:
         script:
           - bash ./gradlew build
     - step:
-        name: Publish artifact
+        name: Get AWS CodeArtifact auth token
         image: atlassian/pipelines-awscli
+        script:
+          - aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text >./authToken.txt
+        artifacts:
+          - authToken.txt
+    - step:
+        name: Publish build artifact
         caches:
           - gradle
         script:
-          - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
+          - export CODEARTIFACT_AUTH_TOKEN=$(cat ./authToken.txt)
           - bash ./gradlew jar publish
