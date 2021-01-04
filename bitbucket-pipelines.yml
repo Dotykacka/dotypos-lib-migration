@@ -1,4 +1,4 @@
-image: dotykacka/java-build-box:1.0
+image: dotykacka/java-build-box:latest
 pipelines:
 
   branches:
