@@ -3,14 +3,20 @@ pipelines:
 
   branches:
     master:
-      - step:
-          name: Build & tests
-          caches:
-            - gradle
-          script:
-            - sh ./gradlew build
+      - parallel:
+          - step:
+              name: Build & tests
+              caches:
+                - gradle
+              script:
+                - sh ./gradlew build
+          - step:
+              name: Security Scan
+              script:
+                - pipe: atlassian/git-secrets-scan:0.4.3
       - step:
           name: Publish build artifact
+          deployment: Production artifact
           caches:
             - gradle
           script:
