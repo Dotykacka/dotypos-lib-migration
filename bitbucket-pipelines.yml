@@ -1,7 +1,8 @@
-image: openjdk:8
+image: dotykacka/java-build-box:1.0
 pipelines:
-  default:
-    - parallel:
+
+  branches:
+    master:
       - step:
           name: Build & tests
           caches:
@@ -10,15 +11,14 @@ pipelines:
             - bash ./gradlew build
       - step:
           name: Get AWS CodeArtifact auth token
-          image: atlassian/pipelines-awscli
           script:
             - aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text >./authToken.txt
           artifacts:
             - authToken.txt
-    - step:
-        name: Publish build artifact
-        caches:
-          - gradle
-        script:
-          - export CODEARTIFACT_AUTH_TOKEN=$(cat ./authToken.txt)
-          - bash ./gradlew jar publish
+      - step:
+          name: Publish build artifact
+          caches:
+            - gradle
+          script:
+            - export CODEARTIFACT_AUTH_TOKEN=$(cat ./authToken.txt)
+            - bash ./gradlew jar publish
