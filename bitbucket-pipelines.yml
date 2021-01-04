@@ -19,5 +19,5 @@ pipelines:
         caches:
           - gradle
         script:
-          - bash export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
+          - bash export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
           - bash ./gradlew jar publish
