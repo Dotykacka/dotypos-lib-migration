@@ -3,9 +3,21 @@ pipelines:
   default:
     - step:
         name: Build library
+        caches:
+          - gradle
         script:
           - bash ./gradlew build
     - step:
         name: Run Unit tests
+        caches:
+          - gradle
         script:
           - bash ./gradlew test
+    - step:
+        name: Publish artifact
+        image: atlassian/pipelines-awscli
+        caches:
+          - gradle
+        script:
+          - bash export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
+          - bash ./gradlew jar publish
