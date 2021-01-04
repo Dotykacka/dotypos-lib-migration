@@ -12,7 +12,7 @@ pipelines:
       - step:
           name: Get AWS CodeArtifact auth token
           script:
-            - aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text >./authToken.txt
+            - ./usr/local/bin/aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text >./authToken.txt
           artifacts:
             - authToken.txt
       - step:
