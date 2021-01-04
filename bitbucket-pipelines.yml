@@ -8,7 +8,7 @@ pipelines:
           caches:
             - gradle
           script:
-            - bash ./gradlew build
+            - sh ./gradlew build
       - step:
           name: Get AWS CodeArtifact auth token
           script:
@@ -21,4 +21,4 @@ pipelines:
             - gradle
           script:
             - export CODEARTIFACT_AUTH_TOKEN=$(cat ./authToken.txt)
-            - bash ./gradlew jar publish
+            - sh ./gradlew jar publish
