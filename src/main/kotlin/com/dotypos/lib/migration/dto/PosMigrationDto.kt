@@ -42,7 +42,7 @@ data class PosMigrationDto(
     val sellers: Set<SellerMigrationDto>,
 
     /**
-     * Sorted list of courses available
+     * Sorted list of meal courses
      */
     @SerialName("courses")
     val courses: List<CourseMigrationDto>,

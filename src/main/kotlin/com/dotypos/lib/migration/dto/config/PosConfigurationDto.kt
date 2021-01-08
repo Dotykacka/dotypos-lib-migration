@@ -123,15 +123,34 @@ data class PosConfigurationDto(
         val receiptFormat: String,
 
         /**
+         * Formatted number of last receipt
+         */
+        @SerialName("receiptLastNumber")
+        val receiptLastNumber: String,
+
+        /**
          * Numbering format of invoices, [receiptFormat] is used if `null`
          */
         @SerialName("invoiceFormat")
         val invoiceFormat: String?,
 
         /**
+         * Formatted number of last invoice - required if [invoiceFormat] is not `null`
+         */
+        @SerialName("invoiceLastNumber")
+        val invoiceLastNumber: String?,
+
+        /**
          * Numbering format of cancellation and corrective invoices, [invoiceFormat] is used if `null`
          */
         @SerialName("cancellationInvoiceFormat")
         val cancellationInvoiceFormat: String?,
+
+
+        /**
+         * Formatted number of last cancellation invoice - required if [cancellationInvoiceFormat] is not `null`
+         */
+        @SerialName("cancellationInvoiceLastNumber")
+        val cancellationInvoiceLastNumber: String?,
     )
 }
