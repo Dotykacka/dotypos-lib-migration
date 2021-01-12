@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.dotypos.lib.migration"
-version = "0.1-SNAPSHOT"
+version = "0.1.3"
 
 repositories {
     mavenCentral()
@@ -58,7 +58,7 @@ tasks.withType<KotlinCompile>() {
 
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
+        register<MavenPublication>("gpr") {
             groupId = "com.dotypos.lib.migration"
             artifactId = "lib-migration"
             from(components["java"])
@@ -78,10 +78,11 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("https://dotypos-000053698179.d.codeartifact.eu-west-1.amazonaws.com/maven/lib-data-migration/")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Dotykacka/dotypos-lib-migration")
             credentials {
-                username = "aws"
-                password = System.getenv("CODEARTIFACT_AUTH_TOKEN")
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GHP_USER")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GHP_TOKEN")
             }
         }
     }

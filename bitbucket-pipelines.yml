@@ -15,15 +15,14 @@ pipelines:
               name: Security Scan
               script:
                 - pipe: atlassian/git-secrets-scan:0.4.3
-      - step:
-          name: Publish build artifact
-          deployment: Production artifact
-          caches:
-            - gradle-wrapper
-            - gradle
-          script:
-            - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --region eu-west-1 --domain dotypos --domain-owner 000053698179 --query authorizationToken --output text`
-            - sh ./gradlew jar publish
+#      - step:
+#          name: Publish build artifact
+#          deployment: Production artifact
+#          caches:
+#            - gradle-wrapper
+#            - gradle
+#          script:
+#            - sh ./gradlew jar publish
 
 definitions:
   caches:
