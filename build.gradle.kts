@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.dotypos.lib.migration"
-version = "0.1.3"
+version = "0.1.5"
 
 repositories {
     mavenCentral()

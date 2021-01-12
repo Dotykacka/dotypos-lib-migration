@@ -12,10 +12,7 @@ import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.hasSize
-import org.valiktor.functions.isLessThan
-import org.valiktor.functions.isNotBlank
-import org.valiktor.functions.isNotEmpty
+import org.valiktor.functions.*
 import org.valiktor.validate
 import java.util.*
 
@@ -78,6 +75,18 @@ data class PosMigrationDto(
     val customers: List<CustomerMigrationDto>,
 
     /**
+     * List of table pages
+     */
+    @SerialName("tablePages")
+    val tablePages: List<TablePageMigrationDto>,
+
+    /**
+     * List of tables
+     */
+    @SerialName("tables")
+    val tables: List<TableMigrationDto>,
+
+    /**
      * List of printers and print tasks
      */
     @SerialName("printers")
@@ -85,8 +94,11 @@ data class PosMigrationDto(
 ) {
 
     init {
-        // TODO: Validate all entities for unique ID
-        // TODO: Validate all related entities for related entity existence
+        validate(this) {
+            // TODO: Validate all entities for unique ID
+            // TODO: Validate all related entities for related entity existence
+            // TODO: Validate overlap of tables
+        }
     }
 
     @Serializable

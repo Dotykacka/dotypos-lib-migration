@@ -2,7 +2,7 @@ package com.dotypos.lib.migration.dto.entity.iface
 
 interface SellerRelated {
     /**
-     * ID of related seller
+     * ID of related [SellerMigrationDto]
      */
     val sellerId: Long?
 
