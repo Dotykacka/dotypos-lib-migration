@@ -33,12 +33,6 @@ data class CategoryMigrationDto(
     override val hexColor: String,
 
     /**
-     * Sorted list of [products][ProductMigrationDto] included in category
-     */
-    @SerialName("products")
-    val products: List<ProductMigrationDto>,
-
-    /**
      * Default VAT rate which will be used for newly created products in category or
      * as VAT rate on [Instant Sale screen](http://manual.dotykacka.cz/index.html?okamzityprodej.html).
      *
