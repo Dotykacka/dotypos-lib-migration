@@ -116,16 +116,22 @@ data class PosMigrationDto(
         val created: Date,
 
         /**
-         * Source POS metadata
+         * Registration email of user (Administrator) - used to prefill in Dotypos Setup Guide
          */
-        @SerialName("pos")
-        val pos: PosMetadata,
+        @SerialName("email")
+        val email: String?,
 
         /**
          * License key to be used for migration
          */
         @SerialName("licenseKey")
         val licenseKey: String?,
+
+        /**
+         * Source POS metadata
+         */
+        @SerialName("pos")
+        val pos: PosMetadata,
     ) {
         init {
             validate(this) {
@@ -140,6 +146,7 @@ data class PosMigrationDto(
     data class PosMetadata(
         /**
          * Foreign POS id - used for subsequent migrations
+         * Markeeta: shopId/terminalId
          */
         @SerialName("id")
         val id: String
