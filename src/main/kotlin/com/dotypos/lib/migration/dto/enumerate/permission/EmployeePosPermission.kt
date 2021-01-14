@@ -60,73 +60,73 @@ enum class EmployeePosPermission {
     CUSTOMER_EDIT,
 
     /**
-     * TODO
+     * Enables access to the In/Out cash for possibility to register cash operations.
      */
     @SerialName("cashOut")
     CASH_OUT,
 
     /**
-     * TODO
+     * Enables access to the History of issued receipts.
      */
     @SerialName("orderHistoryDisplay")
     ORDER_HISTORY_DISPLAY,
 
     /**
-     * TODO
+     * Enables to make cancellations of the receipts in the History.
      */
     @SerialName("cancelDocument")
     CANCEL_DOCUMENT,
 
     /**
-     * TODO
+     * Enables to make cancellations of the open orders.
      */
     @SerialName("cancelOpenOrder")
     CANCEL_OPEN_ORDER,
 
     /**
-     * TODO
+     * Enables to edit parked items on the opened orders. Enables full edit, including to add or remove pieces, or to delete item from the order.
      */
     @SerialName("changeParkedItem")
     CHANGE_PARKED_ITEM,
 
     /**
-     * TODO
+     * Allows editing the quantity and price of a newly added, not parked item of an open order. It also allows you to remove non-parked items from the order.
      */
     @SerialName("changeNotParkedItem")
     CHANGE_NOT_PARKED_ITEM,
 
     /**
-     * TODO
+     * Enables to print the Review Receipt from the open order.
      */
     @SerialName("controlReceiptPrint")
     CONTROL_RECEIPT_PRINT,
 
     /**
-     * TODO
+     * Enables to give discounts on the open order / item of the open order.
      */
     @SerialName("controlReceiptPrint")
     DISCOUNT_OFFER,
 
     /**
-     * TODO
+     * Enables to issue the receipt without payment.
      */
     @SerialName("issueNotPaid")
     ISSUE_NOT_PAID,
 
     /**
-     * TODO
+     * Enables to use payment method the Write-Offs. Is required to have enabled "Write-Offs" in the Payment Settings
      */
     @SerialName("writeOff")
     WRITE_OFF,
 
     /**
-     * TODO
+     * Enables to display button "Open Cash drawer". Is required to have enabled "Display open button on main screen" in the Cash drawer settings.
      */
     @SerialName("cashDrawerOpen")
     CASH_DRAWER_OPEN,
 
     /**
-     * TODO
+     * Enables access to the Stock app. Permission is superior to other Stock permissions.
      */
     @SerialName("stockManagement")
     STOCK_MANAGEMENT
