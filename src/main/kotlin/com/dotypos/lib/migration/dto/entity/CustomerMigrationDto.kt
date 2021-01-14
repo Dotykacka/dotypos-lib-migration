@@ -44,6 +44,12 @@ data class CustomerMigrationDto(
     val companyId: String,
 
     /**
+     * Additional companyId, used only in some countries
+     */
+    @SerialName("companyId2")
+    val companyId2: String?,
+
+    /**
      * VAT ID of company (CZ = DIČ)
      */
     @SerialName("vatId")
