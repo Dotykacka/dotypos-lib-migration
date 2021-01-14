@@ -26,6 +26,9 @@ data class CategoryMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 
+    @SerialName(WithExternalEdiId.SERIAL_NAME)
+    override val externalEdiId: String?,
+
     @SerialName(WithName.SERIAL_NAME)
     override val name: String,
 
@@ -68,6 +71,7 @@ data class CategoryMigrationDto(
     override val version: Long = WithVersion.DEFAULT_VALUE,
 ) :
     BaseEntityDto(),
+    WithExternalEdiId,
     WithName,
     WithColor,
     WithMaxDiscount,
