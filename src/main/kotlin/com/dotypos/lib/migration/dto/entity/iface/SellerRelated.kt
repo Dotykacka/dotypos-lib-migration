@@ -7,6 +7,6 @@ interface SellerRelated {
     val sellerId: Long?
 
     companion object {
-        const val SERIALIZED_NAME = "sellerId"
+        const val SERIAL_NAME = "sellerId"
     }
 }

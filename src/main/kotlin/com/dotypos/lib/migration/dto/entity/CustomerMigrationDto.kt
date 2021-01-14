@@ -109,7 +109,7 @@ data class CustomerMigrationDto(
     @SerialName("discountGroupId")
     val discountGroupId: Long?,
 
-    @SerialName(SellerRelated.SERIALIZED_NAME)
+    @SerialName(SellerRelated.SERIAL_NAME)
     override val sellerId: Long?,
 
     @SerialName(Deletable.SERIAL_NAME)

@@ -12,7 +12,7 @@ data class TableMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 
-    @SerialName(SellerRelated.SERIALIZED_NAME)
+    @SerialName(SellerRelated.SERIAL_NAME)
     override val sellerId: Long?,
 
     /**

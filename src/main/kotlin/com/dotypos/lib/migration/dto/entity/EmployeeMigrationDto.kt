@@ -39,7 +39,7 @@ class EmployeeMigrationDto(
     @SerialName(WithMaxDiscount.SERIALIZED_NAME)
     override val maxDiscount: BigDecimal?,
 
-    @SerialName(SellerRelated.SERIALIZED_NAME)
+    @SerialName(SellerRelated.SERIAL_NAME)
     override val sellerId: Long?,
 
     /**
@@ -73,7 +73,7 @@ class EmployeeMigrationDto(
     @SerialName("mobileWaiterPermissions")
     val mobileWaiterPermissions: Set<EmployeeMobileWaiterPermission>,
 
-    @SerialName(Enablable.SERIALIZED_NAME)
+    @SerialName(Enablable.SERIAL_NAME)
     override val isEnabled: Boolean,
 
     @SerialName(Deletable.SERIAL_NAME)

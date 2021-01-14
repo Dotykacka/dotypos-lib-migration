@@ -36,7 +36,7 @@ data class CzFiscalizationConfiguration(
     @SerialName("saleLocationId")
     val saleLocationId: Long,
 
-    @SerialName(SellerRelated.SERIALIZED_NAME)
+    @SerialName(SellerRelated.SERIAL_NAME)
     override val sellerId: Long?,
 
     /**
@@ -64,7 +64,7 @@ data class CzFiscalizationConfiguration(
     @SerialName("fiscalizeCashless")
     val fiscalizeCashless: Boolean,
 
-    @SerialName(Enablable.SERIALIZED_NAME)
+    @SerialName(Enablable.SERIAL_NAME)
     override val isEnabled: Boolean,
 ) : SellerRelated, Enablable {
     companion object {
