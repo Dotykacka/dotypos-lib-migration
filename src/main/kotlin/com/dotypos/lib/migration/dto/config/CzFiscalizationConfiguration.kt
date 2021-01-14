@@ -13,16 +13,11 @@ data class CzFiscalizationConfiguration(
 
     /**
      * Base64 encoded keystore file in default EET format repackaged with custom password
+     * Custom password is craeted by `sha1hex(PosMigrationDto.Metadata.migrationId + SALT)`
+     * where `SALT` will be provided separately
      */
     @SerialName("data")
     val data: String,
-
-    /**
-     * Password seed used to generate actual password to access the keystore.
-     * Password generating algorithm TBD
-     */
-    @SerialName("passwordSeed")
-    val passwordSeed: String,
 
     /**
      * VAT ID of seller, validate with [REGEX_VAT_ID]
