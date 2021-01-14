@@ -17,7 +17,7 @@ import kotlinx.serialization.UseSerializers
 import java.math.BigDecimal
 
 @Serializable
-class EmployeeMigrationDto(
+data class EmployeeMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 
