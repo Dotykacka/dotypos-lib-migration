@@ -115,8 +115,17 @@ data class PosMigrationDto(
         @SerialName("created")
         val created: Date,
 
+        /**
+         * Source POS metadata
+         */
         @SerialName("pos")
-        val pos: PosMetadata
+        val pos: PosMetadata,
+
+        /**
+         * License key to be used for migration
+         */
+        @SerialName("licenseKey")
+        val licenseKey: String?,
     ) {
         init {
             validate(this) {
