@@ -176,6 +176,13 @@ data class DocumentMigrationDto(
     @SerialName("printWithLunchInvitation")
     val printWithLunchInvitation: Boolean,
 
+    /**
+     * Document was created with connected certified scale, it changes behavior of printouts and
+     * behavior of customer display to meet legal requirements.
+     */
+    @SerialName("welmecMode")
+    val welmecMode: Boolean,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), SellerRelated, WithTags {
