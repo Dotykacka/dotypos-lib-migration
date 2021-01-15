@@ -90,7 +90,13 @@ data class PosConfigurationDto(
      * List of FiscalizationConfigurations (each for every seller)
      */
     @SerialName("czFiscalizationConfigurations")
-    val czFiscalizationConfigurations: List<CzFiscalizationConfiguration>
+    val czFiscalizationConfigurations: List<CzFiscalizationConfiguration>,
+
+    /**
+     * ID of default [warehouse][WarehouseMigrationDto]
+     */
+    @SerialName("defaultWarehouseId")
+    val defaultWarehouseId: Long,
 ) : WithName, WithCountry {
 
     @Serializable

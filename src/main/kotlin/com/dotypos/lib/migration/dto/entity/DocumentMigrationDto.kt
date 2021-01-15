@@ -6,10 +6,7 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.CzFiscalizationConstraints
-import com.dotypos.lib.migration.dto.entity.iface.SellerRelated
-import com.dotypos.lib.migration.dto.entity.iface.WithId
-import com.dotypos.lib.migration.dto.entity.iface.WithTags
-import com.dotypos.lib.migration.dto.entity.iface.WithVersion
+import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
@@ -101,11 +98,7 @@ data class DocumentMigrationDto(
     @SerialName("totalValue")
     val totalValue: BigDecimal,
 
-    /**
-     * Currency code [ISO 4217 format](https://www.iso.org/iso-4217-currency-codes.html)
-     */
-    @SerialName("currency")
-    val currency: String,
+    override val currency: String,
 
     /**
      * Foreign currency info - if presented the document price is also shown in foreign currency
@@ -183,9 +176,15 @@ data class DocumentMigrationDto(
     @SerialName("welmecMode")
     val welmecMode: Boolean,
 
+    /**
+     * Plaintext of additional print data - used for printing receipt from payment terminal. New lines separated by `\n`
+     */
+    @SerialName("printData")
+    val printData: String,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), SellerRelated, WithTags {
+) : BaseEntityDto(), SellerRelated, WithTags, WithCurrency {
 
     @Serializable
     enum class Type(
@@ -244,12 +243,12 @@ data class DocumentMigrationDto(
         val code: String,
 
         /**
-         * Conversion rate to new currency.
-         * 250 CZK (primary) ~ 10 USD = 0.04
-         * 10 USD (primary) ~ 250 CZK = 25
+         * Exchange rate to new currency.
+         * 250 CZK (primary) ~ 10 USD -> 0.04
+         * 10 USD (primary) ~ 250 CZK -> 25
          */
-        @SerialName("conversionRate")
-        val conversionRate: BigDecimal,
+        @SerialName("exchangeRate")
+        val exchangeRate: BigDecimal,
     )
 
     @Serializable
