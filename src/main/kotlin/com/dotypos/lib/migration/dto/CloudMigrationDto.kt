@@ -2,6 +2,7 @@ package com.dotypos.lib.migration.dto
 
 import com.dotypos.lib.migration.dto.entity.DocumentMigrationDto
 import com.dotypos.lib.migration.dto.entity.MoneyOperationMigrationDto
+import com.dotypos.lib.migration.dto.entity.StockOperationMigrationDto
 import kotlinx.serialization.SerialName
 
 data class CloudMigrationDto(
@@ -22,4 +23,10 @@ data class CloudMigrationDto(
      */
     @SerialName("moneyOperations")
     val moneyOperations: List<MoneyOperationMigrationDto>,
+
+    /**
+     * List of all stock operations
+     */
+    @SerialName("stockOperations")
+    val stockOperations: List<StockOperationMigrationDto>,
 )
