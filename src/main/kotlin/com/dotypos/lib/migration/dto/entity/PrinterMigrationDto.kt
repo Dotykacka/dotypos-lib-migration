@@ -88,5 +88,92 @@ data class PrinterMigrationDto(
     companion object {
         const val DEFAULT_ENCODING = "cp852"
         const val DEFAULT_PRINT_LOCALE = "default"
+
+        /**
+         * Creates predefined migration for SunmiV1 internal printer
+         * @param id ID of printer
+         * @param name Name of printer (Internal printer in customers language)
+         * @param tasks List of print tasks
+         * @param version version of entity
+         */
+        fun createSunmiV1InternalPrinter(
+            id: Long,
+            name: String,
+            tasks: List<PrintTaskMigrationDto>,
+            version: Long
+        ) = PrinterMigrationDto(
+            id = id,
+            name = name,
+            connectionMode = PrinterConnectionMode.INTERNAL_SUNMI_V1,
+            address = "local",
+            encoding = Charsets.UTF_8.name(),
+            charactersFontA = 32,
+            charactersFontB = 38,
+            appendLines = 4,
+            canBeep = false,
+            canCut = false,
+            withDrawer = false,
+            tasks = tasks,
+            isDeleted = false,
+            version = version
+        )
+
+        /**
+         * Creates predefined migration for SunmiV2 internal printer
+         * @param id ID of printer
+         * @param name Name of printer (Internal printer in customers language)
+         * @param tasks List of print tasks
+         * @param version version of entity
+         */
+        fun createSunmiV2InternalPrinter(
+            id: Long,
+            name: String,
+            tasks: List<PrintTaskMigrationDto>,
+            version: Long
+        ) = PrinterMigrationDto(
+            id = id,
+            name = name,
+            connectionMode = PrinterConnectionMode.INTERNAL_SUNMI_V2,
+            address = "local",
+            encoding = Charsets.UTF_8.name(),
+            charactersFontA = 32,
+            charactersFontB = 38,
+            appendLines = 4,
+            canBeep = false,
+            canCut = false,
+            withDrawer = false,
+            tasks = tasks,
+            isDeleted = false,
+            version = version
+        )
+
+        /**
+         * Creates predefined migration for Landi A8 internal printer
+         * @param id ID of printer
+         * @param name Name of printer (Internal printer in customers language)
+         * @param tasks List of print tasks
+         * @param version version of entity
+         */
+        fun createLandiA8InternalPrinter(
+            id: Long,
+            name: String,
+            tasks: List<PrintTaskMigrationDto>,
+            version: Long
+        ) = PrinterMigrationDto(
+            id = id,
+            name = name,
+            connectionMode = PrinterConnectionMode.INTERNAL_LANDI_A8,
+            address = "local",
+            encoding = Charsets.UTF_8.name(),
+            charactersFontA = 32,
+            charactersFontB = 38,
+            appendLines = 2,
+            canBeep = false,
+            canCut = false,
+            withDrawer = false,
+            tasks = tasks,
+            isDeleted = false,
+            version = version
+        )
     }
 }

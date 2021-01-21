@@ -12,5 +12,17 @@ enum class PrinterConnectionMode {
     NETWORK,
 
     @SerialName("bluetooth")
-    BLUETOOTH
+    BLUETOOTH,
+
+    /**
+     * Not implemented in Dotypos yet
+     */
+    @SerialName("sunmiV1")
+    INTERNAL_SUNMI_V1,
+
+    @SerialName("sunmiV2")
+    INTERNAL_SUNMI_V2,
+
+    @SerialName("landiA8")
+    INTERNAL_LANDI_A8,
 }
