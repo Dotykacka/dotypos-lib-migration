@@ -20,6 +20,12 @@ data class StockOperationMigrationDto(
     override val id: Long,
 
     /**
+     * ID of grouping [transaction][StockTransactionMigrationDto].
+     */
+    @SerialName("stockTransactionId")
+    val stockTransactionId: Long?,
+
+    /**
      * ID of [product][ProductMigrationDto]
      */
     @SerialName("productId")

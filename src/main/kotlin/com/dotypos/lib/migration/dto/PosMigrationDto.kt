@@ -93,6 +93,12 @@ data class PosMigrationDto(
     val warehouses: List<WarehouseMigrationDto>,
 
     /**
+     * List of suppliers
+     */
+    @SerialName("supplliers")
+    val suppliers: List<SupplierMigrationDto>,
+
+    /**
      * List of printers and print tasks
      */
     @SerialName("printers")
