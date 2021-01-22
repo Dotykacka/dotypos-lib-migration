@@ -31,6 +31,12 @@ data class PrintTaskMigrationDto(
     val header: String?,
 
     /**
+     * Logo to be printed - used only for [PrintTaskType.RECEIPT]. Encoded in BASE64 format consumable by Android BitmapFactory.
+     */
+    @SerialName("logo")
+    val logo: String?,
+
+    /**
      * Number of copies to be printed
      */
     @SerialName("copies")
