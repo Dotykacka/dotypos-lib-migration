@@ -13,6 +13,12 @@ data class PosConfigurationDto(
     override val name: String,
 
     /**
+     * Operation mode of cash register - affects the layout of main sale screen
+     */
+    @SerialName("mode")
+    val mode: Mode,
+
+    /**
      * Country of POS system in [ISO 3166 alpha2](https://www.iso.org/obp/ui/#search/code/) format,
      * behavior changes are applied for different countries
      */
@@ -98,6 +104,27 @@ data class PosConfigurationDto(
     @SerialName("defaultWarehouseId")
     val defaultWarehouseId: Long,
 ) : WithName, WithCountry {
+
+    @Serializable
+    enum class Mode {
+        /**
+         * Catalog of products grouped by categories: selection of categories is place at the top of the layout
+         */
+        @SerialName("catalogDefault")
+        CATALOG_DEFAULT,
+
+        /**
+         * Catalog of products grouped by categories: selection of categories is place at the top of the layout
+         */
+        @SerialName("catalogMasterDetail")
+        CATALOG_SIMPLIFIED,
+
+        /**
+         * PLU/EAN keyboard
+         */
+        @SerialName("instantSale")
+        INSTANT_SALE,
+    }
 
     @Serializable
     data class RoundingConfiguration(
