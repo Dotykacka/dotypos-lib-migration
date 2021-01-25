@@ -113,6 +113,19 @@ data class ProductMigrationDto(
     val unitPriceWithVatC: BigDecimal? = null,
 
     /**
+     * Unit price with VAT (group D)
+     */
+    @SerialName("unitPriceWithVatD")
+    val unitPriceWithVatD: BigDecimal? = null,
+
+
+    /**
+     * Unit price with VAT (group E)
+     */
+    @SerialName("unitPriceWithVatE")
+    val unitPriceWithVatE: BigDecimal? = null,
+
+    /**
      * VAT rate, `null` for exempted VAT.
      */
     @SerialName("vatRate")
