@@ -109,7 +109,7 @@ data class PrinterMigrationDto(
             encoding = Charsets.UTF_8.name(),
             charactersFontA = 32,
             charactersFontB = 38,
-            appendLines = 4,
+            appendLines = 1,
             canBeep = false,
             canCut = false,
             withDrawer = false,
