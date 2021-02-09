@@ -22,7 +22,7 @@ data class PosConfigurationDto(
      * Country of POS system in [ISO 3166 alpha2](https://www.iso.org/obp/ui/#search/code/) format,
      * behavior changes are applied for different countries
      */
-    @SerialName(WithCountry.DEFAULT_COUNTRY)
+    @SerialName(WithCountry.SERIALIZED_NAME)
     override val country: String,
 
     /**
