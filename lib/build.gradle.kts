@@ -1,9 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val kotlinVersion: String by rootProject.extra
+
 plugins {
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.serialization") version "1.4.21"
-    id("org.jetbrains.dokka") version "1.4.20"
+    kotlin("jvm")
+    kotlin("plugin.serialization")
+    id("org.jetbrains.dokka")
     id("java-library")
     id("maven-publish")
 }
@@ -11,15 +13,10 @@ plugins {
 group = "com.dotypos.lib.migration"
 version = "0.2.7"
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 dependencies {
     // Implementation
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.21")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
     // Entity validation
     implementation("org.valiktor:valiktor-core:0.12.0")

@@ -1,6 +1,6 @@
 
 rootProject.name = "dotypos-lib-migration"
-include("lib")
+include("lib", "demo")
 
 pluginManagement {
     repositories {

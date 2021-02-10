@@ -179,7 +179,6 @@ data class PosConfigurationDto(
         @SerialName("cancellationInvoiceFormat")
         val cancellationInvoiceFormat: String?,
 
-
         /**
          * Formatted number of last cancellation invoice - required if [cancellationInvoiceFormat] is not `null`
          */
