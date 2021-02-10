@@ -130,7 +130,7 @@ data class DocumentMigrationDto(
      * Data related to CZ fiscalization (etrzby;EET)
      */
     @SerialName("czFiscalizationData")
-    val czFiscalizationData: CzFiscalizationData,
+    val czFiscalizationData: CzFiscalizationData?,
 
     /**
      * ID of of [subject][OnBehalfSaleSubjectMigrationDto] to behalf of is this document issued
