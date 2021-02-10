@@ -1,6 +1,5 @@
 package com.dotypos.lib.migration.dto.entity
 
-import com.dotypos.lib.migration.dto.entity.iface.Deletable
 import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
 import com.dotypos.lib.migration.dto.enumerate.PrintTaskType

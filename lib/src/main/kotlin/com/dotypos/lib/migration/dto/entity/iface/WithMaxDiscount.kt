@@ -1,6 +1,5 @@
 package com.dotypos.lib.migration.dto.entity.iface
 
-import com.dotypos.lib.migration.extension.toColorInt
 import kotlinx.serialization.SerialName
 import java.math.BigDecimal
 

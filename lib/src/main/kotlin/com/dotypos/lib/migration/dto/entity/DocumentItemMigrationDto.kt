@@ -5,7 +5,6 @@
 
 package com.dotypos.lib.migration.dto.entity
 
-import com.dotypos.lib.migration.dto.entity.ProductMigrationDto.ComparableMeasurement
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
@@ -14,7 +13,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.math.BigDecimal
-import kotlin.math.round
 
 /**
  * Item of issued document - basically snapshot of [product][ProductMigrationDto] with additional properties
