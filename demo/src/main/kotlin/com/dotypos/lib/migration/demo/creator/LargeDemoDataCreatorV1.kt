@@ -12,7 +12,7 @@ import kotlin.random.Random
 class LargeDemoDataCreatorV1(private val seed: Long) : PosDataCreator {
 
     var categoriesCount = 200
-    var productsCount = 10_000
+    var productsCount = 30_000
 
     val categories by lazy {
         val random = Random(seed)

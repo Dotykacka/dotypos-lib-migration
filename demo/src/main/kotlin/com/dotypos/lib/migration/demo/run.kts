@@ -2,6 +2,7 @@ package com.dotypos.lib.migration.demo
 
 import com.dotypos.lib.migration.demo.creator.CloudDataCreator
 import com.dotypos.lib.migration.demo.creator.PosDataCreator
+import com.dotypos.lib.migration.util.MigrationSerializationUtil
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.valiktor.ConstraintViolationException
@@ -57,7 +58,9 @@ fun debug(message: () -> String) {
 inline fun <reified T> writeJson(dataObject: T, path: String) {
     File(path).run {
         createNewFile()
-        dataObject.let(json::encodeToString).also(::writeText)
+        MigrationSerializationUtil
+            .serializeObject(dataObject)
+            .also(::writeText)
     }
 }
 
