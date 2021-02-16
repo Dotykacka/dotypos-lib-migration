@@ -100,11 +100,87 @@ data class DocumentMigrationDto(
 
     override val currency: String,
 
+    /**
+     * Foreign currency info - if presented the document price is also shown in foreign currency
+     * Used for printing/reporting
+     */
+    @SerialName("foreignCurrency")
+    val foreignCurrency: ForeignCurrency?,
+
+    /**
+     * Marks whether the document is fully paid = summary of money transactions related to document
+     * is equal to its [totalValue]
+     */
+    @SerialName("paid")
+    val isPaid: Boolean,
+
+    /**
+     * Amount of points acquired by this document
+     */
+    @SerialName("points")
+    val points: BigDecimal,
+
+    /**
+     * Was the issuer of document payer of the tax at the moment of issuing
+     */
+    @SerialName("issuedByVatPayer")
+    val issuedByVatPayer: Boolean,
+
+    /**
+     * Data related to CZ fiscalization (etrzby;EET)
+     */
+    @SerialName("czFiscalizationData")
+    val czFiscalizationData: CzFiscalizationData?,
+
+    /**
+     * ID of of [subject][OnBehalfSaleSubjectMigrationDto] to behalf of is this document issued
+     */
+    @SerialName("onBehalfSaleSubjectId")
+    val onBehalfSaleSubjectId: Long?,
+
+    /**
+     * External ID of document - used for pairing with external delivery systems (Uber Eats, Vyzvedni si)
+     * Reserved prefixes: uber-eats, vyzvednisi
+     */
+    @SerialName("externalId")
+    val externalId: String?,
+
     @SerialName(SellerRelated.SERIAL_NAME)
     override val sellerId: Long?,
 
     @SerialName(WithTags.SERIAL_NAME)
     override val tags: List<String>,
+
+    /**
+     * Set true if order should be treated as delivery - used for reporting
+     */
+    @SerialName("delivery")
+    val isDelivery: Boolean,
+
+    /**
+     * Document is issued in reverse charge mode - [issuedByVatPayer] must be `true`
+     */
+    @SerialName("reverseCharge")
+    val isReverseCharge: Boolean,
+
+    /**
+     * In some countries, the lunch invitation form must be printed on the receipt when used as an accounting expense.
+     */
+    @SerialName("printWithLunchInvitation")
+    val printWithLunchInvitation: Boolean,
+
+    /**
+     * Document was created with connected certified scale, it changes behavior of printouts and
+     * behavior of customer display to meet legal requirements.
+     */
+    @SerialName("welmecMode")
+    val welmecMode: Boolean,
+
+    /**
+     * Plaintext of additional print data - used for printing receipt from payment terminal. New lines separated by `\n`
+     */
+    @SerialName("printData")
+    val printData: String,
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
