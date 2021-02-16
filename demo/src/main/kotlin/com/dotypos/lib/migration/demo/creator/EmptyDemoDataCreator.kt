@@ -9,7 +9,7 @@ object EmptyDemoDataCreator : PosDataCreator {
     override fun createPosData() = PosMigrationDto(
         metadata = PosMigrationDto.Metadata(
             migrationId = "EMPTY-min10",
-            created = Date(),
+            created = Date(System.currentTimeMillis() - 1L),
             email = null,
             licenseKey = null,
             pos = PosMigrationDto.PosMetadata(

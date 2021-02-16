@@ -15,4 +15,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation(project(":lib"))
     implementation(kotlin("script-runtime"))
+
+    implementation("org.valiktor:valiktor-core:0.12.0")
 }
