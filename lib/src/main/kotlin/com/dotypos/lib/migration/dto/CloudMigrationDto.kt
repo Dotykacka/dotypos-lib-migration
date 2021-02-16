@@ -5,7 +5,9 @@ import com.dotypos.lib.migration.dto.entity.MoneyOperationMigrationDto
 import com.dotypos.lib.migration.dto.entity.StockOperationMigrationDto
 import com.dotypos.lib.migration.dto.entity.StockTransactionMigrationDto
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CloudMigrationDto(
     /**
      * Data of migration result returned by Dotykačka POS

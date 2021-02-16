@@ -1,11 +1,20 @@
+@file:UseSerializers(
+    BigDecimalSerializer::class,
+    DateSerializer::class
+)
+
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
+import com.dotypos.lib.migration.serialization.BigDecimalSerializer
+import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import java.util.*
 
+@Serializable
 data class StockTransactionMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
@@ -27,6 +36,12 @@ data class StockTransactionMigrationDto(
      */
     @SerialName("invoiceNumber")
     val invoiceNumber: String?,
+
+    /**
+     * Type of stock transaction
+     */
+    @SerialName("type")
+    val type: Type,
 
     /**
      * Note/description of the transaction (user input)

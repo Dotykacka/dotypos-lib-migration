@@ -94,6 +94,12 @@ data class StockOperationMigrationDto(
     @SerialName("note")
     val note: String,
 
+    /**
+     * Type of stock operation
+     */
+    @SerialName("type")
+    val type: Type,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithEmployee, WithMeasurementUnit, SellerRelated {
