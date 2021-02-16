@@ -1,11 +1,12 @@
 package com.dotypos.lib.migration.demo.creator
 
+import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
 import com.dotypos.lib.migration.dto.config.PosConfigurationDto
 import com.dotypos.lib.migration.dto.enumerate.PaymentMethod
 import java.util.*
 
-object EmptyDemoDataCreator : PosDataCreator {
+object EmptyDemoDataCreator : PosDataCreator, CloudDataCreator {
     override fun createPosData() = PosMigrationDto(
         metadata = PosMigrationDto.Metadata(
             migrationId = "EMPTY-min10",
@@ -58,5 +59,13 @@ object EmptyDemoDataCreator : PosDataCreator {
         warehouses = emptyList(),
         suppliers = emptyList(),
         printers = emptyList(),
+    )
+
+    override fun createCloudData() = CloudMigrationDto(
+        migrationResultData = "cloudId-branchId-metadata",
+        documents = emptyList(),
+        moneyOperations = emptyList(),
+        stockTransactions = emptyList(),
+        stockOperations = emptyList(),
     )
 }

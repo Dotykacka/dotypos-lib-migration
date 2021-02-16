@@ -1,5 +1,6 @@
 package com.dotypos.lib.migration.demo
 
+import com.dotypos.lib.migration.demo.creator.CloudDataCreator
 import com.dotypos.lib.migration.demo.creator.PosDataCreator
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -18,12 +19,19 @@ DemoExportType.values().forEach { type ->
     info { "Creating ${"${type.id} export".bold()}..." }
     val creator = type.creator
     if (creator is PosDataCreator) {
-        progress("POS data") {
+        progress("POS data (${type.name})") {
             try {
-                val json = creator.createPosData().let(json::encodeToString)
-                val file = File("$outputDir${type.id}.json")
-                file.createNewFile()
-                file.writeText(json)
+                writeJson(creator.createPosData(), "$outputDir${type.id}-pos.json")
+            } catch (e: ConstraintViolationException) {
+                System.err.println(e.constraintViolations.toString())
+            }
+        }
+    }
+
+    if (creator is CloudDataCreator) {
+        progress("Cloud data (${type.name})") {
+            try {
+                writeJson(creator.createCloudData(), "$outputDir${type.id}-cloud.json")
             } catch (e: ConstraintViolationException) {
                 System.err.println(e.constraintViolations.toString())
             }
@@ -44,6 +52,13 @@ fun info(message: () -> String) {
 
 fun debug(message: () -> String) {
     System.out.println(message())
+}
+
+inline fun <reified T> writeJson(dataObject: T, path: String) {
+    File(path).run {
+        createNewFile()
+        dataObject.let(json::encodeToString).also(::writeText)
+    }
 }
 
 fun String.bold() = "\u001b[1m$this\u001B[0m"
