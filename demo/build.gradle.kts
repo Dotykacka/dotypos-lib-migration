@@ -1,5 +1,4 @@
 val kotlinVersion: String by rootProject.extra
-val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
 
 plugins {
     kotlin("jvm")
@@ -19,5 +18,3 @@ dependencies {
 
     implementation("org.valiktor:valiktor-core:0.12.0")
 }
-
-compileKotlin.kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()

@@ -58,8 +58,8 @@ fun debug(message: () -> String) {
 inline fun <reified T> writeJson(dataObject: T, path: String) {
     File(path).run {
         createNewFile()
-        MigrationSerializationUtil
-            .serializeObject(dataObject)
+        MigrationSerializationUtil.serializer
+            .encodeToString(dataObject)
             .also(::writeText)
     }
 }
