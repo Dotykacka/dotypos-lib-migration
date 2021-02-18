@@ -103,6 +103,12 @@ data class PosMigrationDto(
      */
     @SerialName("printers")
     val printers: List<PrinterMigrationDto>,
+
+    /**
+     * List of
+     */
+    @SerialName("stockOperations")
+    val stockOperations: List<StockOperationMigrationDto>,
 ) {
 
     init {
