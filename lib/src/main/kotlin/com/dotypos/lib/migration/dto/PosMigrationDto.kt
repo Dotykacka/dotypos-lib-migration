@@ -105,7 +105,7 @@ data class PosMigrationDto(
     val printers: List<PrinterMigrationDto>,
 
     /**
-     * List of
+     * List of all stock operations - only stock taking records expected
      */
     @SerialName("stockOperations")
     val stockOperations: List<StockOperationMigrationDto>,

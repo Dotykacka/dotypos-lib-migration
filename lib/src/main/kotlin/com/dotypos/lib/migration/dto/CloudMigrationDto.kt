@@ -34,7 +34,7 @@ data class CloudMigrationDto(
     val stockTransactions: List<StockTransactionMigrationDto>,
 
     /**
-     * List of all stock operations - only stock taking records expected
+     * List of all stock operations
      */
     @SerialName("stockOperations")
     val stockOperations: List<StockOperationMigrationDto>,
