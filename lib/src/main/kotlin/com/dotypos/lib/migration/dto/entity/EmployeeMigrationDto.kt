@@ -46,7 +46,7 @@ data class EmployeeMigrationDto(
      * PIN data wrapper
      */
     @SerialName("pin")
-    val pin: PinWrapper,
+    val pin: PinWrapper?,
 
     /**
      * Is PIN required for login
