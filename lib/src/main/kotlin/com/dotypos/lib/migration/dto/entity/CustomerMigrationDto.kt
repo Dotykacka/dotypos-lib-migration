@@ -92,7 +92,7 @@ data class CustomerMigrationDto(
      * Date of customer account expiration (used for memberships or limited access)
      */
     @SerialName("expirationDate")
-    val expirationDate: Date,
+    val expirationDate: Date?,
 
     /**
      * Printable customer note
