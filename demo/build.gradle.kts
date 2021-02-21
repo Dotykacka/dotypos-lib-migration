@@ -16,5 +16,8 @@ dependencies {
     implementation(project(":lib"))
     implementation(kotlin("script-runtime"))
 
+    // Random names generator
+    implementation("io.github.serpro69:kotlin-faker:1.6.0")
+
     implementation("org.valiktor:valiktor-core:0.12.0")
 }

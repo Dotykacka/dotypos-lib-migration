@@ -14,7 +14,7 @@ val outputDir = "output/"
 
 info { "Initializing..." }
 
-val json = Json { prettyPrint = true }
+val prettyJson = Json { prettyPrint = true }
 
 DemoExportType.values().forEach { type ->
     info { "Creating ${"${type.id} export".bold()}..." }
@@ -22,7 +22,8 @@ DemoExportType.values().forEach { type ->
     if (creator is PosDataCreator) {
         progress("POS data (${type.name})") {
             try {
-                writeJson(creator.createPosData(), "$outputDir${type.id}-pos.json")
+                writeJson(creator.createPosData(), "$outputDir${type.id}-pos.pretty.json", prettyJson)
+                writeJson(creator.createPosData(), "$outputDir${type.id}-pos.json", MigrationSerializationUtil.serializer)
             } catch (e: ConstraintViolationException) {
                 System.err.println(e.constraintViolations.toString())
             }
@@ -32,7 +33,8 @@ DemoExportType.values().forEach { type ->
     if (creator is CloudDataCreator) {
         progress("Cloud data (${type.name})") {
             try {
-                writeJson(creator.createCloudData(), "$outputDir${type.id}-cloud.json")
+                writeJson(creator.createCloudData(), "$outputDir${type.id}-cloud.pretty.json", prettyJson)
+                writeJson(creator.createCloudData(), "$outputDir${type.id}-cloud.json", MigrationSerializationUtil.serializer)
             } catch (e: ConstraintViolationException) {
                 System.err.println(e.constraintViolations.toString())
             }
@@ -55,10 +57,10 @@ fun debug(message: () -> String) {
     System.out.println(message())
 }
 
-inline fun <reified T> writeJson(dataObject: T, path: String) {
+inline fun <reified T> writeJson(dataObject: T, path: String, json: Json) {
     File(path).run {
         createNewFile()
-        MigrationSerializationUtil.serializer
+        json
             .encodeToString(dataObject)
             .also(::writeText)
     }
