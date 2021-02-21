@@ -1,5 +1,6 @@
 package com.dotypos.lib.migration.demo.creator
 
+import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
 import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
@@ -13,6 +14,7 @@ import io.github.serpro69.kfaker.Faker
 import io.github.serpro69.kfaker.FakerConfig
 import io.github.serpro69.kfaker.create
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
@@ -30,15 +32,18 @@ class DynamicDataCreator(
     private val tables: Int = 0,
     private val warehouses: Int = 1,
     private val suppliers: Int = 20,
-    private val printers: Int = 1
-) : PosDataCreator {
+    private val printers: Int = 1,
+    private val documents: Int = 20_000
+) : PosDataCreator, CloudDataCreator {
 
     private val fakerConfig = FakerConfig.builder().create {
         random = java.util.Random(seed)
     }
     private val faker = Faker(fakerConfig)
 
-    // DATA
+    // POS DATA
+    private val cloudId = "123"
+    private val branchId = "321"
     private val employeesList by randomList(employees, ::createEmployee)
     private val categoryList by randomList(categories, ::createCategory)
     private val productList by randomList(products, ::createProduct)
@@ -69,6 +74,77 @@ class DynamicDataCreator(
             warehouses = warehouseList,
             suppliers = supplierList,
             printers = printerList,
+        )
+    }
+
+    override fun createCloudData(): CloudMigrationDto {
+        val random = Random(seed)
+        val baseData = EmptyDemoDataCreator.createCloudData()
+
+        val documentList = mutableListOf<DocumentMigrationDto>()
+        var created = Calendar.getInstance()
+            .apply { set(Calendar.YEAR, 2018) }
+            .timeInMillis
+
+        repeat(documents) { pos ->
+
+            val total = BigDecimal.ZERO
+            val totalPoints = BigDecimal.ZERO
+
+            val foreignCurrencyCode = random.valueOrNull(20) { CURRENCIES.keys.random(random) }
+
+            val paid = random.nextBoolean()
+            documentList += DocumentMigrationDto(
+                pos.toLong(),
+                type = DocumentMigrationDto.Type.RECEIPT,
+                relatedDocumentId = null,
+                tableId = random.valueOrNull(2) { tableList.randomOrNull()?.id },
+                created = Date(created),
+                documentNumber = "ADFS-${pos}",
+                issueDate = Date(created + random.nextLong(2 * 60_000, 30 * 60_000)),
+                customerId = random.valueOrNull(10) { customerList.random().id },
+                employeeId = employeesList.random().id,
+                location = random.valueOrNull(2) {
+                    DocumentMigrationDto.Location(
+                        date = Date(created),
+                        accuracy = random.nextFloat() * 5,
+                        latitude = random.nextDouble() * 180 - 90,
+                        longitude = random.nextDouble() * 360 - 180,
+                    )
+                },
+                note = random.valueOrDefault(4, "") { randomLorem(random.nextInt(3, 25)) },
+                items = emptyList(),
+                totalValue = total,
+                currency = "CZK",
+                foreignCurrency = foreignCurrencyCode?.let { code ->
+                    DocumentMigrationDto.ForeignCurrency(
+                        code = code,
+                        exchangeRate = (CURRENCIES.getOrDefault(code, 0.0) * random.nextDouble(0.8, 1.2)).toBigDecimal()
+                    )
+                },
+                isPaid = paid,
+                points = totalPoints,
+                issuedByVatPayer = true,
+                czFiscalizationData = null,
+                onBehalfSaleSubjectId = null,
+                externalId = null,
+                sellerId = null,
+                tags = emptyList(),
+                isDelivery = false,
+                isReverseCharge = false,
+                printWithLunchInvitation = false,
+                welmecMode = false,
+                printData = random.valueOrDefault(3, "") {
+                    randomLorem(30)
+                },
+                version = System.currentTimeMillis()
+            )
+            created += random.nextLong(5 * 60_000, 120 * 60_000)
+        }
+
+        return baseData.copy(
+            migrationResultData = "$cloudId-$branchId-metadata",
+            documents = documentList,
         )
     }
 
@@ -376,6 +452,8 @@ class DynamicDataCreator(
         List(numberOfRecords) { id -> factory(id.toLong(), random) }
     }
 
+    private fun randomLorem(words: Int) = List(words) { faker.lorem.words() }.joinToString(separator = " ")
+
     private fun Random.nextBigDecimal(min: Int = 0, max: Int = Int.MAX_VALUE, decimals: Int = 2): BigDecimal {
         return BigDecimal(nextLong(min.toLong(), max.toLong()) / 10.0.pow(decimals))
     }
@@ -397,4 +475,20 @@ class DynamicDataCreator(
 
     private fun <T> ifOrNull(condition: Boolean, getValue: () -> T) =
         if (condition) getValue() else null
+
+    private fun BigDecimal.canonical(decimals: Int) {
+        this.setScale(decimals, RoundingMode.HALF_DOWN)
+    }
+
+    companion object {
+        val CURRENCIES = mapOf(
+            "EUR" to 26.34,
+            "USD" to 18.34,
+            "CHF" to 23.23,
+            "PLN" to 5.34,
+            "JPY" to 0.23,
+            "SEK" to 2.58,
+            "HUF" to 0.072,
+        )
+    }
 }
