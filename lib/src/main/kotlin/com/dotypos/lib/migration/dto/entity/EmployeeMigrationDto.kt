@@ -55,6 +55,12 @@ data class EmployeeMigrationDto(
     val isPinRequired: Boolean,
 
     /**
+     * Barcode of employees card/RFID code. Usable for user login.
+     */
+    @SerialName("barcode")
+    val barcode: String? = null,
+
+    /**
      * Set of allowed POS Permissions
      */
     @SerialName("posPermissions")
