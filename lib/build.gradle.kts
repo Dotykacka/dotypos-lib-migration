@@ -4,7 +4,7 @@ val kotlinVersion: String by rootProject.extra
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization")
+    kotlin("plugin.serialization") version "1.4.21"
     id("org.jetbrains.dokka")
     id("java-library")
     id("maven-publish")
@@ -15,11 +15,11 @@ version = "0.2.14"
 
 dependencies {
     // Implementation
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
     // Entity validation
-    implementation("org.valiktor:valiktor-core:0.12.0")
+    api("org.valiktor:valiktor-core:0.12.0")
 
     // Documentation
     testImplementation(kotlin("test-junit5"))
