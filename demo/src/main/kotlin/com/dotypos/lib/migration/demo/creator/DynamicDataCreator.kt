@@ -61,6 +61,15 @@ class DynamicDataCreator(
         val baseData = EmptyDemoDataCreator.createPosData()
 
         return baseData.copy(
+            metadata = PosMigrationDto.Metadata(
+                migrationId = "EMPTY-min10",
+                created = Date(System.currentTimeMillis() - 1L),
+                email = "john.doe@example.com",
+                licenseKey = "EXAMPLE",
+                pos = PosMigrationDto.PosMetadata(
+                    id = "EMPTY",
+                ),
+            ),
             employees = employeesList.toSet(),
             sellers = emptySet(),
             courses = courseList,
