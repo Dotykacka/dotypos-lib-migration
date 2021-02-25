@@ -38,6 +38,12 @@ data class PrinterMigrationDto(
     val encoding: String = DEFAULT_ENCODING,
 
     /**
+     * Printer codepage to be used
+     */
+    @SerialName("codepage")
+    val codepage: Int = DEFAULT_CODEPAGE,
+
+    /**
      * Number of characters to be used when printing with Font A
      */
     @SerialName("charactersFontA")
@@ -87,6 +93,7 @@ data class PrinterMigrationDto(
 ) : BaseEntityDto(), WithName, Deletable {
     companion object {
         const val DEFAULT_ENCODING = "cp852"
+        const val DEFAULT_CODEPAGE = 18
         const val DEFAULT_PRINT_LOCALE = "default"
 
         /**
