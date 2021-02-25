@@ -37,7 +37,7 @@ object EmptyDemoDataCreator : PosDataCreator, CloudDataCreator {
             sendReceiptsByEmail = false,
             documentNumbering = PosConfigurationDto.DocumentNumberingConfiguration(
                 receiptFormat = "%Y@6",
-                receiptLastNumber = "2020@000000",
+                receiptLastNumber = "2020000000",
                 invoiceFormat = null,
                 invoiceLastNumber = null,
                 cancellationInvoiceFormat = null,

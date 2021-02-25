@@ -5,6 +5,10 @@ import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.enumerate.PaymentMethod
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.valiktor.functions.isNull
+import org.valiktor.functions.isValid
+import org.valiktor.functions.matches
+import org.valiktor.validate
 
 @Serializable
 data class PosConfigurationDto(
@@ -150,7 +154,12 @@ data class PosConfigurationDto(
     @Serializable
     data class DocumentNumberingConfiguration(
         /**
-         * Numbering format of receipts
+         * Numbering format of receipts, required format, matching [NUMBERING_FORMAT_REGEX]:
+         * PREFIX@COUNTER_DIGITS
+         * where PREFIX can include date variables. If prefix part is changed the document counter is reset to 0 zero
+         * Examples:
+         * %Y-%m-%d-@4 -> 2021-04-15-0001
+         * @6 -> 000023
          */
         @SerialName("receiptFormat")
         val receiptFormat: String,
@@ -184,5 +193,40 @@ data class PosConfigurationDto(
          */
         @SerialName("cancellationInvoiceLastNumber")
         val cancellationInvoiceLastNumber: String?,
-    )
+    ) {
+        init {
+            validate(this) {
+                validate(DocumentNumberingConfiguration::receiptFormat).matches(NUMBERING_FORMAT_REGEX)
+                validate(DocumentNumberingConfiguration::receiptLastNumber).matches(
+                    createNumberingFormatValidationRegex(receiptFormat)
+                )
+                validate(DocumentNumberingConfiguration::invoiceFormat).matches(NUMBERING_FORMAT_REGEX)
+                if (invoiceFormat != null) {
+                    validate(DocumentNumberingConfiguration::invoiceLastNumber).matches(
+                        createNumberingFormatValidationRegex(invoiceFormat)
+                    )
+                }
+                validate(DocumentNumberingConfiguration::cancellationInvoiceFormat).matches(NUMBERING_FORMAT_REGEX)
+                if (cancellationInvoiceFormat != null) {
+                    validate(DocumentNumberingConfiguration::cancellationInvoiceLastNumber).matches(
+                        createNumberingFormatValidationRegex(cancellationInvoiceFormat)
+                    )
+                }
+            }
+        }
+
+        companion object {
+            val NUMBERING_FORMAT_REGEX = Regex("(([0-9a-zA-Z.,:;/#\\-_ ]|%[dmyY])*)@([0-9]+)")
+
+            private fun createNumberingFormatValidationRegex(format: String): Regex {
+                val (prefix, counterDigits) = format.split("@")
+                val regexPrefix = prefix
+                    .replace("%d", "([012][1-9]|[3][01])")
+                    .replace("%m", "([0][1-9]|[1][012])")
+                    .replace("%y", "([0-9]{2})")
+                    .replace("%Y", "([0-9]{4})")
+                return Regex("$regexPrefix[0-9]{$counterDigits}")
+            }
+        }
+    }
 }
