@@ -7,6 +7,7 @@ package com.dotypos.lib.migration.dto
 
 import com.dotypos.lib.migration.dto.config.PosConfigurationDto
 import com.dotypos.lib.migration.dto.entity.*
+import com.dotypos.lib.migration.dto.validation.hasUniqueItemIds
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
@@ -113,7 +114,20 @@ data class PosMigrationDto(
 
     init {
         validate(this) {
-            // TODO: Validate all entities for unique ID
+            validate(PosMigrationDto::employees).hasUniqueItemIds()
+            validate(PosMigrationDto::sellers).hasUniqueItemIds()
+            validate(PosMigrationDto::courses).hasUniqueItemIds()
+            validate(PosMigrationDto::categories).hasUniqueItemIds()
+            validate(PosMigrationDto::products).hasUniqueItemIds()
+            validate(PosMigrationDto::ingredients).hasUniqueItemIds()
+            validate(PosMigrationDto::customerDiscountGroups).hasUniqueItemIds()
+            validate(PosMigrationDto::customers).hasUniqueItemIds()
+            validate(PosMigrationDto::tablePages).hasUniqueItemIds()
+            validate(PosMigrationDto::tables).hasUniqueItemIds()
+            validate(PosMigrationDto::warehouses).hasUniqueItemIds()
+            validate(PosMigrationDto::suppliers).hasUniqueItemIds()
+            validate(PosMigrationDto::printers).hasUniqueItemIds()
+            validate(PosMigrationDto::stockOperations).hasUniqueItemIds()
             // TODO: Validate all related entities for related entity existence
             // TODO: Validate overlap of tables
         }
