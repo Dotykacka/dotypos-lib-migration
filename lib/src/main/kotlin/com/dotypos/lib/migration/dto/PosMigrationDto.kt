@@ -113,20 +113,57 @@ data class PosMigrationDto(
 ) {
 
     init {
+        val sellerIds = sellers.map { it.id }.toSet()
+        val employeeIds = employees.map { it.id }.toSet()
+        val productIds = products.map { it.id }.toSet()
+        val productMap = products.map { it.id to it }.toMap()
+
+
         validate(this) {
-            validate(PosMigrationDto::employees).hasUniqueItemIds()
-            validate(PosMigrationDto::sellers).hasUniqueItemIds()
+            validate(PosMigrationDto::employees)
+                .hasUniqueItemIds()
+                .isValid { items ->
+                    items.all { it.sellerId == null || sellerIds.contains(it.sellerId) }
+                }
+            validate(PosMigrationDto::sellers)
+                .hasUniqueItemIds()
+                .isValid { items ->
+                    items.all { employeeIds.contains(it.employeeId) }
+                }
             validate(PosMigrationDto::courses).hasUniqueItemIds()
             validate(PosMigrationDto::categories).hasUniqueItemIds()
-            validate(PosMigrationDto::products).hasUniqueItemIds()
-            validate(PosMigrationDto::ingredients).hasUniqueItemIds()
-            validate(PosMigrationDto::customerDiscountGroups).hasUniqueItemIds()
+            validate(PosMigrationDto::products)
+                .hasUniqueItemIds()
+                .isValid { items ->
+                    val categoryIds = categories.map { it.id }.toSet()
+                    items.all { categoryIds.contains(it.categoryId) }
+                }
+            validate(PosMigrationDto::ingredients)
+                .hasUniqueItemIds()
+                .isValid { items ->
+                    items.all { productIds.contains(it.parentProductId) && productIds.contains(it.ingredientProductId) }
+                }
+                .isValid { items ->
+                    // Same measurement unit group check
+                    items.all {
+                        val product = productMap[it.ingredientProductId] ?: return@isValid false
+                        product.measurementUnit.group == it.measurementUnit.group
+                    }
+                }
+            validate(PosMigrationDto::customerDiscountGroups)
+                .hasUniqueItemIds()
             validate(PosMigrationDto::customers).hasUniqueItemIds()
             validate(PosMigrationDto::tablePages).hasUniqueItemIds()
             validate(PosMigrationDto::tables).hasUniqueItemIds()
             validate(PosMigrationDto::warehouses).hasUniqueItemIds()
             validate(PosMigrationDto::suppliers).hasUniqueItemIds()
-            validate(PosMigrationDto::printers).hasUniqueItemIds()
+            validate(PosMigrationDto::printers)
+                .hasUniqueItemIds()
+                .isValid {
+                    // Uniqueness of print tasks
+                    val allTaskIds = it.flatMap { it.tasks.map { it.id } }
+                    allTaskIds.size == allTaskIds.toSet().size
+                }
             validate(PosMigrationDto::stockOperations).hasUniqueItemIds()
             // TODO: Validate all related entities for related entity existence
             // TODO: Validate overlap of tables

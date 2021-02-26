@@ -10,11 +10,14 @@ import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithMeasurementUnit
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
+import com.dotypos.lib.migration.dto.validation.isValidId
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import org.valiktor.functions.isNotEqualTo
+import org.valiktor.validate
 import java.math.BigDecimal
 
 @Serializable
@@ -52,4 +55,14 @@ data class ProductIngredientMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), WithMeasurementUnit, Deletable
+) : BaseEntityDto(), WithMeasurementUnit, Deletable {
+    init {
+        validate(this) {
+            validate(ProductIngredientMigrationDto::parentProductId)
+                .isValidId()
+                .isNotEqualTo(ingredientProductId)
+            validate(ProductIngredientMigrationDto::ingredientProductId)
+                .isValidId()
+        }
+    }
+}

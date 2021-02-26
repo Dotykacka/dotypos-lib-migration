@@ -210,7 +210,7 @@ class DynamicDataCreator(
         description = "",
         hexColor = getColor(random),
         packaging = BigDecimal.ONE,
-        measurementUnit = MigrationMeasurementUnit.PIECE,
+        measurementUnit = MigrationMeasurementUnit.values().random(random),
         comparableMeasurement = null,
         ean = emptyList(),
         plu = emptyList(),
@@ -233,7 +233,7 @@ class DynamicDataCreator(
         val productIds = List(products) { id -> id.toLong() }.toMutableList()
         val ingredientProductsIds = mutableSetOf<Long>()
         repeat(ingredientProductsCount) {
-            val ingredientId = productIds.random()
+            val ingredientId = productIds.random(random)
             productIds -= ingredientId
             ingredientProductsIds += ingredientId
         }
@@ -245,12 +245,15 @@ class DynamicDataCreator(
                 parentProductId = productIds.random(),
                 ingredientProductId = ingredientProductId,
                 quantity = random.nextBigDecimal(1, 20),
-                measurementUnit = ingredientProduct.measurementUnit,
+                measurementUnit = MigrationMeasurementUnit.values()
+                    .filter { ingredientProduct.measurementUnit.group == it.group }
+                    .random(random),
                 isDeleted = false,
                 version = System.currentTimeMillis(),
             )
         }
     }
+
 
     private fun createDiscountGroup(id: Long, random: Random): CustomerDiscountGroupMigrationDto {
         return CustomerDiscountGroupMigrationDto(
