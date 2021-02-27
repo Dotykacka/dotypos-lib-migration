@@ -13,7 +13,7 @@ data class CzFiscalizationConfiguration(
 
     /**
      * Base64 encoded keystore file in default EET format repackaged with custom password
-     * Custom password is craeted by `sha1hex(PosMigrationDto.Metadata.migrationId + SALT)`
+     * Custom password is created by `sha1hex(PosMigrationDto.Metadata.migrationId + SALT)`
      * where `SALT` will be provided separately
      */
     @SerialName("data")
