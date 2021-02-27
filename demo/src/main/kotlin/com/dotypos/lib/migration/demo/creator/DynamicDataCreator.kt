@@ -171,11 +171,18 @@ class DynamicDataCreator(
 
     private fun createEmployee(id: Long, random: Random): EmployeeMigrationDto {
         val name = faker.name.name()
-        val pin = random.valueOrNull(2) {
+        val pin = if (id == 0L) {
             EmployeeMigrationDto.PinWrapper(
                 type = EmployeeMigrationDto.PinWrapper.Type.PLAINTEXT,
-                data = random.nextInt(0, 9999).toString(),
+                data = "0000",
             )
+        } else {
+            random.valueOrNull(2) {
+                EmployeeMigrationDto.PinWrapper(
+                    type = EmployeeMigrationDto.PinWrapper.Type.PLAINTEXT,
+                    data = random.nextInt(1111, 9999).toString(),
+                )
+            }
         }
         return EmployeeMigrationDto(
             id = id,
@@ -188,11 +195,15 @@ class DynamicDataCreator(
             sellerId = null,
             pin = pin,
             isPinRequired = pin != null,
-            posPermissions = EmployeePosPermission.values().filter { random.nextBoolean() }.toSet(),
+            posPermissions = if (id == 0L) {
+                EmployeePosPermission.values().toSet()
+            } else {
+                EmployeePosPermission.values().filter { random.nextBoolean() }.toSet()
+            },
             stockPermissions = EmployeeStockPermission.values().filter { random.nextBoolean() }.toSet(),
             mobileWaiterPermissions = EmployeeMobileWaiterPermission.values().filter { random.nextBoolean() }.toSet(),
-            isEnabled = random.valueOrDefault(5, true) { false },
-            isDeleted = random.valueOrDefault(20, true) { false },
+            isEnabled = if (id == 0L) true else random.valueOrDefault(5, true) { false },
+            isDeleted = if (id == 0L) false else random.valueOrDefault(20, false) { true },
             version = System.currentTimeMillis(),
         )
     }
@@ -533,11 +544,7 @@ class DynamicDataCreator(
     private fun <T> Random.valueOrDefault(occurence: Int, defaultValue: T, getValue: () -> T): T =
         if (nextInt() % occurence == 0) getValue() else defaultValue
 
-    private fun <T> Random.valueOrNull(
-        occurence: Int,
-        getValue: () -> T
-    ) =
-        valueOrDefault(occurence, null, getValue)
+    private fun <T> Random.valueOrNull(occurence: Int, getValue: () -> T) = valueOrDefault(occurence, null, getValue)
 
     private fun <T> ifOrNull(condition: Boolean, getValue: () -> T) =
         if (condition) getValue() else null
