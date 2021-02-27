@@ -129,5 +129,11 @@ enum class EmployeePosPermission {
      * Enables access to the Stock app. Permission is superior to other Stock permissions.
      */
     @SerialName("stockManagement")
-    STOCK_MANAGEMENT
+    STOCK_MANAGEMENT,
+
+    /**
+     * Enables access to POS settings
+     */
+    @SerialName("posSettings")
+    POS_SETTINGS,
 }
