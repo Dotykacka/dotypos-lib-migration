@@ -2,6 +2,7 @@ package com.dotypos.lib.migration.demo.creator
 
 import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
+import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration
 import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
 import com.dotypos.lib.migration.dto.enumerate.PrintTaskType
@@ -10,9 +11,13 @@ import com.dotypos.lib.migration.dto.enumerate.ProductStockOverdraftBehavior
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeePosPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeStockPermission
+import com.dotypos.lib.migration.util.KeystoreUtil
+import com.dotypos.lib.migration.util.KeystoreUtil.repackage
+import com.dotypos.lib.migration.util.KeystoreUtil.toBase64
 import io.github.serpro69.kfaker.Faker
 import io.github.serpro69.kfaker.FakerConfig
 import io.github.serpro69.kfaker.create
+import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
@@ -33,7 +38,8 @@ class DynamicDataCreator(
     private val warehouses: Int = 1,
     private val suppliers: Int = 20,
     private val printers: Int = 1,
-    private val documents: Int = 20_000
+    private val documents: Int = 20_000,
+    private val withEet: Boolean = true,
 ) : PosDataCreator, CloudDataCreator {
 
     private val fakerConfig = FakerConfig.builder().create {
@@ -42,6 +48,7 @@ class DynamicDataCreator(
     private val faker = Faker(fakerConfig)
 
     // POS DATA
+    private val migrationId = Date().toString()
     private val cloudId = "123"
     private val branchId = "321"
     private val employeesList by randomList(employees, ::createEmployee)
@@ -57,18 +64,23 @@ class DynamicDataCreator(
     private val supplierList by randomList(suppliers, ::createSupplier)
     private val printerList by randomList(printers, ::createPrinter)
 
+    private val czFiscalizationConfigurations by randomList(1, ::createCzFiscalizationConfiguration)
+
     override fun createPosData(): PosMigrationDto {
         val baseData = EmptyDemoDataCreator.createPosData()
 
         return baseData.copy(
             metadata = PosMigrationDto.Metadata(
-                migrationId = "EMPTY-min10",
+                migrationId = migrationId,
                 created = Date(System.currentTimeMillis() - 1L),
                 email = "john.doe@example.com",
                 licenseKey = "EXAMPLE",
                 pos = PosMigrationDto.PosMetadata(
                     id = "EMPTY",
                 ),
+            ),
+            posConfiguration = baseData.posConfiguration.copy(
+                czFiscalizationConfigurations = czFiscalizationConfigurations,
             ),
             employees = employeesList.toSet(),
             sellers = emptySet(),
@@ -385,6 +397,9 @@ class DynamicDataCreator(
     }
 
     private fun createPrinter(id: Long, random: Random): PrinterMigrationDto {
+        if (id == 0L) {
+            return createDefaultPrinter(id);
+        }
         val connectionMode = PrinterConnectionMode.values().random(random)
         val address = when (connectionMode) {
             PrinterConnectionMode.USB -> "1234:5678"
@@ -420,7 +435,7 @@ class DynamicDataCreator(
             canCut = largePrinter && random.nextBoolean(),
             withDrawer = largePrinter,
             tasks = List(random.nextInt(0, 5)) { pos ->
-                createPrintTask(pos.toLong(), random)
+                createPrintTask(id * 1000L + pos.toLong(), random)
             },
             isDeleted = false,
             version = System.currentTimeMillis(),
@@ -441,14 +456,7 @@ class DynamicDataCreator(
             logo = ifOrNull(type == PrintTaskType.RECEIPT) {
                 random.valueOrNull(
                     occurence = 2,
-                    getValue = {
-                        // Ineffective use raw bitmap
-                        List(2048) { random.nextLong().toString(16) }
-                            .joinToString()
-                            .toByteArray()
-                            .let { Base64.getEncoder().encode(it) }
-                            .toString()
-                    }
+                    getValue = { logos.random(random).toBase64() }
                 )
             },
             copies = 1,
@@ -456,6 +464,52 @@ class DynamicDataCreator(
             useFontB = random.nextBoolean(),
             filters = emptyList(), // TODO: add tags migration
             version = System.currentTimeMillis(),
+        )
+    }
+
+    private fun createDefaultPrinter(id: Long) = PrinterMigrationDto(
+        id = id,
+        name = "DOTPR80",
+        connectionMode = PrinterConnectionMode.USB,
+        address = "4070:33054",
+        encoding = PrinterMigrationDto.DEFAULT_ENCODING,
+        charactersFontA = 48,
+        charactersFontB = 64,
+        appendLines = 2,
+        canBeep = true,
+        canCut = true,
+        withDrawer = true,
+        tasks = listOf(
+            PrintTaskMigrationDto(
+                id = 1000 * id,
+                type = PrintTaskType.RECEIPT,
+                header = "Testing header\nWith\nMultiple lines",
+                logo = logos.random().toBase64(),
+                copies = 1,
+                beep = false,
+                useFontB = false,
+                filters = emptyList(),
+                version = System.currentTimeMillis()
+            )
+        ),
+        isDeleted = false,
+        version = System.currentTimeMillis(),
+    )
+
+    private fun createCzFiscalizationConfiguration(id: Long, random: Random): CzFiscalizationConfiguration {
+        val keystoreName = eetKeystores.keys.random()
+        val keystore = eetKeystores[keystoreName] ?: throw IllegalStateException("No EET keystore found")
+        val newPassphrase = "$migrationId$EET_SALT"
+        return CzFiscalizationConfiguration(
+            data = keystore.repackage("eet", newPassphrase).toBase64(newPassphrase),
+            vatId = keystoreName,
+            saleLocationId = random.nextLong(1, 99999),
+            sellerId = null,
+            printVatId = random.nextBoolean(),
+            simplifiedMode = false,
+            allowWithoutFiscalization = random.nextBoolean(),
+            fiscalizeCashless = true,
+            isEnabled = true
         )
     }
 
@@ -492,6 +546,8 @@ class DynamicDataCreator(
         this.setScale(decimals, RoundingMode.HALF_DOWN)
     }
 
+    private fun ByteArray.toBase64() = Base64.getEncoder().encode(this).let { String(it, Charsets.UTF_8) }
+
     companion object {
         val CURRENCIES = mapOf(
             "EUR" to 26.34,
@@ -502,5 +558,7 @@ class DynamicDataCreator(
             "SEK" to 2.58,
             "HUF" to 0.072,
         )
+
+        val EET_SALT = "DEMO"
     }
 }
