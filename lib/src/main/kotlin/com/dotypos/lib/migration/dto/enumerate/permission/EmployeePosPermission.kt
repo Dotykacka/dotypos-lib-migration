@@ -114,6 +114,12 @@ enum class EmployeePosPermission {
     ISSUE_NOT_PAID,
 
     /**
+     * Enables to change payment method of issued documents.
+     */
+    @SerialName("changePaymentMethod")
+    CHANGE_PAYMENT_METHOD,
+
+    /**
      * Enables to use payment method the Write-Offs. Is required to have enabled "Write-Offs" in the Payment Settings
      */
     @SerialName("writeOff")
@@ -132,7 +138,7 @@ enum class EmployeePosPermission {
     STOCK_MANAGEMENT,
 
     /**
-     * Enables access to POS settings
+     * Enables access to POS settings.
      */
     @SerialName("posSettings")
     POS_SETTINGS,
