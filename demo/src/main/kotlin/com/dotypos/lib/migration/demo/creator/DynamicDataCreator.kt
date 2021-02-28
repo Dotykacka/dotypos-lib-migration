@@ -48,7 +48,7 @@ class DynamicDataCreator(
     private val faker = Faker(fakerConfig)
 
     // POS DATA
-    private val migrationId = Date().toString()
+    private val migrationId = "DEMO$${Date()}"
     private val cloudId = "123"
     private val branchId = "321"
     private val employeesList by randomList(employees, ::createEmployee)
@@ -175,6 +175,10 @@ class DynamicDataCreator(
             EmployeeMigrationDto.PinWrapper(
                 type = EmployeeMigrationDto.PinWrapper.Type.PLAINTEXT,
                 data = "0000",
+            )
+            EmployeeMigrationDto.PinWrapper(
+                type = EmployeeMigrationDto.PinWrapper.Type.MARKEETA_HASH,
+                data = "\$b59173c0\$sha-256\$0fe79e295a2b8da9f8686dc3b348ff1605b57834f0cff0c83f9c2cd9e98648b0",
             )
         } else {
             random.valueOrNull(2) {
@@ -553,7 +557,8 @@ class DynamicDataCreator(
         this.setScale(decimals, RoundingMode.HALF_DOWN)
     }
 
-    private fun ByteArray.toBase64() = Base64.getEncoder().encode(this).let { String(it, Charsets.UTF_8) }
+    private fun ByteArray.toBase64() =
+        Base64.getEncoder().encodeToString(this)
 
     companion object {
         val CURRENCIES = mapOf(

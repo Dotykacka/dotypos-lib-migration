@@ -14,7 +14,7 @@ val herbs by getNames("herbs")
 val logos by lazy(::loadLogos)
 val eetKeystores by lazy(::loadKeystores)
 
-val vatRates = listOf("5", "19", "21").map(::BigDecimal).asIndefinite()
+val vatRates = listOf("10", "15", "21").map(::BigDecimal).asIndefinite()
 fun getColor(random: Random) = "#AABBCC"
 
 private fun getNames(name: String): Lazy<List<String>> = lazy {
