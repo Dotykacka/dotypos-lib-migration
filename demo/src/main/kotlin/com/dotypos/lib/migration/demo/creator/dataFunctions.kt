@@ -12,7 +12,7 @@ val colorNames by getNames("colorNames")
 val fruits by getNames("fruits")
 val herbs by getNames("herbs")
 val logos by lazy(::loadLogos)
-val eetKeystores by lazy(::loadKeystores)
+val eetKeystores by lazy(::loadKeyStores)
 
 val vatRates = listOf("10", "15", "21").map(::BigDecimal).asIndefinite()
 fun getColor(random: Random) = "#AABBCC"
@@ -38,7 +38,7 @@ private fun loadLogos(): List<ByteArray> {
         .toList()
 }
 
-private fun loadKeystores(): Map<String, KeyStore> {
+private fun loadKeyStores(): Map<String, KeyStore> {
     return File({}.javaClass.getResource("/eet").file)
         .walk()
         .filter { it.isFile }

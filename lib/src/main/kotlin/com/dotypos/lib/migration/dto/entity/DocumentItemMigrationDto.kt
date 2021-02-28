@@ -131,14 +131,14 @@ data class DocumentItemMigrationDto(
 
     /**
      * Actually billed unit price without VAT after discounts, rounded according to `PosConfiguration.rounding.items`
-     * using `BigDecimal.ROUND_HALF_UP`
+     * using `RoundingMode.ROUND_HALF_UP`
      */
     @SerialName("totalPriceWithoutVat")
     val totalPriceWithoutVat: BigDecimal,
 
     /**
      * Actually billed price with VAT after discounts, rounded according to `PosConfiguration.rounding.items`
-     * using `BigDecimal.ROUND_HALF_UP`
+     * using `RoundingMode.ROUND_HALF_UP`
      */
     @SerialName("totalPriceWithVat")
     val totalPriceWithVat: BigDecimal,

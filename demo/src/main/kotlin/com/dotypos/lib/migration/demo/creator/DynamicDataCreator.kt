@@ -4,10 +4,7 @@ import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
 import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration
 import com.dotypos.lib.migration.dto.entity.*
-import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
-import com.dotypos.lib.migration.dto.enumerate.PrintTaskType
-import com.dotypos.lib.migration.dto.enumerate.PrinterConnectionMode
-import com.dotypos.lib.migration.dto.enumerate.ProductStockOverdraftBehavior
+import com.dotypos.lib.migration.dto.enumerate.*
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeePosPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeStockPermission
@@ -19,6 +16,7 @@ import io.github.serpro69.kfaker.FakerConfig
 import io.github.serpro69.kfaker.create
 import java.lang.IllegalStateException
 import java.math.BigDecimal
+import java.math.MathContext
 import java.math.RoundingMode
 import java.util.*
 import kotlin.math.pow
@@ -28,7 +26,7 @@ class DynamicDataCreator(
     private val seed: Long,
     private val employees: Int = 20,
     private val products: Int = 30_000,
-    private val ingredients: Int = 20_000,
+    private val ingredients: Int = products / 3,
     private val categories: Int = 200,
     private val customers: Int = 20_000,
     private val discountGroups: Int = 5,
@@ -107,24 +105,197 @@ class DynamicDataCreator(
             .apply { set(Calendar.YEAR, 2018) }
             .timeInMillis
 
+        val sellerId = null // TODO: Add seller support
+        val employeeId = employeesList.random(random).id
+        val customerId = random.valueOrNull(10) { customerList.random().id }
+
+        val moneyOperations = mutableListOf<MoneyOperationMigrationDto>()
+        val stockTransactions = List(random.nextInt(3, 10)) { pos ->
+            StockTransactionMigrationDto(
+                id = pos.toLong(),
+                warehouseId = warehouseList.first().id,
+                supplierId = null,
+                invoiceNumber = "ST-${random.nextLong().toString()}",
+                type = StockTransactionMigrationDto.Type.STOCK_TAKING,
+                note = "Initial state",
+                created = Date(),
+                version = System.currentTimeMillis()
+            )
+        }
+        val stockOperations = mutableListOf<StockOperationMigrationDto>()
+
+        val stockQuantityStatus = mutableMapOf<Long, BigDecimal>()
+        productList
+            .filter { it.stockDeducted }
+            .forEachIndexed { index, product ->
+                val initialQuantity = product.packaging * random.nextLong(0, 1000).toBigDecimal()
+                val purchasePrice = random.nextBigDecimal(
+                    (product.unitPriceWithVat * BigDecimal("0.2")).toInt(),
+                    product.unitPriceWithVat.toInt()
+                )
+                val stockTransaction = stockTransactions.random(random)
+                stockOperations += StockOperationMigrationDto(
+                    id = index.toLong(),
+                    stockTransactionId = stockTransaction.id,
+                    productId = product.id,
+                    warehouseId = warehouseList.first().id,
+                    employeeId = employeesList.random(random).id,
+                    sellerId = null,
+                    documentId = null,
+                    quantityStatus = initialQuantity,
+                    quantity = initialQuantity,
+                    measurementUnit = product.measurementUnit,
+                    purchasePrice = purchasePrice,
+                    avgPurchasePrice = purchasePrice,
+                    currency = "CZK",
+                    note = stockTransaction.note,
+                    type = StockOperationMigrationDto.Type.STOCK_TAKING,
+                    version = System.currentTimeMillis(),
+                )
+                stockQuantityStatus[product.id] = initialQuantity
+            }
+
         repeat(documents) { pos ->
-
-            val total = BigDecimal.ZERO
-            val totalPoints = BigDecimal.ZERO
-
+            val documentId = pos.toLong()
             val foreignCurrencyCode = random.valueOrNull(20) { CURRENCIES.keys.random(random) }
 
+            val itemsMathContext = MathContext(2, RoundingMode.HALF_UP)
+
+            // Items
+            val items = List(random.nextInt(1, 20)) { itemPos ->
+                val itemId = documentId * 1000L + itemPos
+                val product = productList.random(random)
+
+                val baseUnitPriceWithVat = product.unitPriceWithVat
+                val vatMultiplier =
+                    product.vatRate?.multiply(BigDecimal("0.01"))?.plus(BigDecimal.ONE) ?: BigDecimal.ONE
+                val baseUnitPriceWithoutVat = baseUnitPriceWithVat
+                    .divide(vatMultiplier, MathContext.DECIMAL128)
+
+                val discountPercent = random.valueOrDefault(3, BigDecimal.ZERO) {
+                    random.nextBigDecimal(0, 1, 3)
+                }
+                val discountPercentMultiplier = (BigDecimal("100") - discountPercent) * BigDecimal("0.01")
+                val quantity = random.nextLong(1, 5).toBigDecimal()
+
+                val totalPriceWithVat = (baseUnitPriceWithVat * quantity * discountPercentMultiplier)
+                    .round(itemsMathContext)
+                val totalPriceWithoutVat = totalPriceWithVat.divide(vatMultiplier, itemsMathContext)
+
+                // Ingredients
+                stockOperations += ingredientList
+                    .filter { it.parentProductId == product.id }
+                    .mapIndexed { index, ingredientMigrationDto ->
+                        val ingredientProduct =
+                            productList.first { it.id == ingredientMigrationDto.ingredientProductId }
+                        // Modify status
+                        val status =
+                            (stockQuantityStatus[ingredientMigrationDto.ingredientProductId] ?: BigDecimal.ZERO)
+                                .minus(ingredientMigrationDto.quantity)
+                        stockQuantityStatus[ingredientMigrationDto.ingredientProductId] = status
+
+                        StockOperationMigrationDto(
+                            id = itemId * 1000L + index,
+                            stockTransactionId = null,
+                            productId = ingredientMigrationDto.ingredientProductId,
+                            warehouseId = warehouseList.first().id,
+                            employeeId = employeeId,
+                            sellerId = sellerId,
+                            documentId = documentId,
+                            quantity = ingredientMigrationDto.quantity,
+                            quantityStatus = status,
+                            measurementUnit = ingredientProduct.measurementUnit,
+                            purchasePrice = null,
+                            avgPurchasePrice = null,
+                            currency = "CZK",
+                            note = "",
+                            type = StockOperationMigrationDto.Type.SALE,
+                            version = System.currentTimeMillis(),
+                        )
+                    }
+
+                DocumentItemMigrationDto(
+                    id = itemId,
+                    productId = product.id,
+                    categoryId = product.categoryId,
+                    relatedDocumentItemId = null,
+                    courseId = random.valueOrNull(5) {
+                        courseList.randomOrNull(random)?.id
+                    },
+                    type = DocumentItemMigrationDto.Type.COMMON, // TODO: Do more type of items
+                    name = product.name,
+                    printName = product.printName,
+                    subtitle = product.subtitle,
+                    note = product.note,
+                    hexColor = product.hexColor,
+                    packaging = product.packaging,
+                    measurementUnit = product.measurementUnit,
+                    ean = product.ean,
+                    quantity = random.nextLong(1, 5).toBigDecimal(),
+                    unitPurchasePrice = random.valueOrNull(2) {
+                        random.nextBigDecimal(
+                            (product.unitPriceWithVat * BigDecimal("0.2")).toInt(),
+                            product.unitPriceWithVat.toInt()
+                        )
+                    },
+                    baseUnitPriceWithoutVat = baseUnitPriceWithoutVat,
+                    baseUnitPriceWithVat = baseUnitPriceWithVat,
+                    billedUnitPriceWithoutVat = totalPriceWithoutVat.divide(quantity, MathContext.DECIMAL128),
+                    billedUnitPriceWithVat = totalPriceWithVat.divide(quantity, MathContext.DECIMAL128),
+                    totalPriceWithoutVat = totalPriceWithoutVat,
+                    totalPriceWithVat = totalPriceWithVat,
+                    vatRate = product.vatRate,
+                    discountPercent = discountPercent,
+                    points = if (customerId != null) product.points * quantity else BigDecimal.ZERO,
+                    priceInPoints = null,
+                    stockDeducted = product.stockDeducted,
+                    tags = product.tags,
+                    version = System.currentTimeMillis(),
+                )
+            }
+
+            val total = items.sumOf { it.totalPriceWithVat }
+            val totalPoints = items.sumOf { it.points }
+
+            // Money operations
             val paid = random.nextBoolean()
+            if (paid) {
+                val paymentMethod = PaymentMethod.values().random(random)
+                moneyOperations += MoneyOperationMigrationDto(
+                    id = documentId,
+                    sellerId = sellerId,
+                    employeeId = employeeId,
+                    documentId = documentId,
+                    type = MoneyOperationMigrationDto.Type.SALE,
+                    paymentMethod = paymentMethod,
+                    primaryAmount = total,
+                    currency = "CZK",
+                    amount = total,
+                    exchangeRate = BigDecimal.ONE,
+                    note = "",
+                    created = Date(),
+                    cardPaymentData = if (paymentMethod == PaymentMethod.CARD) {
+                        MoneyOperationMigrationDto.CardPaymentData(
+                            transactionCode = random.nextLong().toString()
+                        )
+                    } else {
+                        null
+                    },
+                    tags = emptyList(),
+                    version = System.currentTimeMillis(),
+                )
+            }
+
             documentList += DocumentMigrationDto(
-                pos.toLong(),
+                documentId,
                 type = DocumentMigrationDto.Type.RECEIPT,
                 relatedDocumentId = null,
                 tableId = random.valueOrNull(2) { tableList.randomOrNull()?.id },
                 created = Date(created),
                 documentNumber = "ADFS-${pos}",
                 issueDate = Date(created + random.nextLong(2 * 60_000, 30 * 60_000)),
-                customerId = random.valueOrNull(10) { customerList.random().id },
-                employeeId = employeesList.random().id,
+                customerId = customerId,
+                employeeId = employeeId,
                 location = random.valueOrNull(2) {
                     DocumentMigrationDto.Location(
                         date = Date(created),
@@ -134,7 +305,7 @@ class DynamicDataCreator(
                     )
                 },
                 note = random.valueOrDefault(4, "") { randomLorem(random.nextInt(3, 25)) },
-                items = emptyList(),
+                items = items,
                 totalValue = total,
                 currency = "CZK",
                 foreignCurrency = foreignCurrencyCode?.let { code ->
@@ -149,7 +320,7 @@ class DynamicDataCreator(
                 czFiscalizationData = null,
                 onBehalfSaleSubjectId = null,
                 externalId = null,
-                sellerId = null,
+                sellerId = sellerId,
                 tags = emptyList(),
                 isDelivery = false,
                 isReverseCharge = false,
@@ -166,6 +337,9 @@ class DynamicDataCreator(
         return baseData.copy(
             migrationResultData = "$cloudId-$branchId-metadata",
             documents = documentList,
+            moneyOperations = moneyOperations,
+            stockTransactions = stockTransactions,
+            stockOperations = stockOperations,
         )
     }
 
@@ -256,7 +430,11 @@ class DynamicDataCreator(
 
     private fun createIngredients(): List<ProductIngredientMigrationDto> {
         val random = Random(seed)
-        val ingredientProductsCount = random.nextInt(maxOf(products / ingredients, 1), minOf(ingredients, products))
+        val ingredientProductsCount = if (ingredients == 0) {
+            0
+        } else {
+            random.nextInt(maxOf(products / ingredients, 1), minOf(ingredients, products))
+        }
         val productIds = List(products) { id -> id.toLong() }.toMutableList()
         val ingredientProductsIds = mutableSetOf<Long>()
         repeat(ingredientProductsCount) {
@@ -536,6 +714,9 @@ class DynamicDataCreator(
     private fun randomLorem(words: Int) = List(words) { faker.lorem.words() }.joinToString(separator = " ")
 
     private fun Random.nextBigDecimal(min: Int = 0, max: Int = Int.MAX_VALUE, decimals: Int = 2): BigDecimal {
+        if (min <= max) {
+            return BigDecimal(min)
+        }
         return BigDecimal(nextLong(min.toLong(), max.toLong()) / 10.0.pow(decimals))
     }
 
