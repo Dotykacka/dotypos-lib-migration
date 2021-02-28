@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.dotypos.lib.migration"
-version = "0.3.0"
+version = "0.3.1"
 
 dependencies {
     // Implementation
