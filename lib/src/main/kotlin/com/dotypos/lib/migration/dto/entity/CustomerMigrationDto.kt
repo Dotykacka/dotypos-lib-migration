@@ -79,8 +79,8 @@ data class CustomerMigrationDto(
     @SerialName("zip")
     val zip: String,
 
-    @SerialName(WithCountry.DEFAULT_COUNTRY)
-    override val country: String = DEFAULT_COUNTRY,
+    @SerialName(WithCountry.SERIALIZED_NAME)
+    override val country: String = WithCountry.DEFAULT_COUNTRY,
 
     /**
      * Barcode of customer account (used for loyalty cards or chips)
@@ -123,8 +123,4 @@ data class CustomerMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), SellerRelated, WithTags, WithEmail, WithPhone, WithCountry, Deletable {
-    companion object {
-        const val DEFAULT_COUNTRY = "CZ"
-    }
-}
+) : BaseEntityDto(), SellerRelated, WithTags, WithEmail, WithPhone, WithCountry, Deletable
