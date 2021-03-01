@@ -211,12 +211,6 @@ data class PosMigrationDto(
         val companyInfo: CompanyInfo? = null,
 
         /**
-         * Establishment company info - used for invoices or other places where Company info is printed
-         */
-        @SerialName("establishmentCompanyId")
-        val establishmentCompanyInfo: CompanyInfo? = null,
-
-        /**
          * Source POS metadata
          */
         @SerialName("pos")
