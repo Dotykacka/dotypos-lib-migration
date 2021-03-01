@@ -7,6 +7,8 @@ package com.dotypos.lib.migration.dto
 
 import com.dotypos.lib.migration.dto.config.PosConfigurationDto
 import com.dotypos.lib.migration.dto.entity.*
+import com.dotypos.lib.migration.dto.entity.iface.WithCountry
+import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.validation.hasUniqueItemIds
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
@@ -191,10 +193,28 @@ data class PosMigrationDto(
         val email: String?,
 
         /**
+         * Phone number of user (Administrator) - used to prefil in Dotypos Setup Guide
+         */
+        @SerialName("phone")
+        val phone: String? = null,
+
+        /**
          * License key to be used for migration
          */
         @SerialName("licenseKey")
         val licenseKey: String?,
+
+        /**
+         * Company info - used for Dotypos Setup Guide - cloud creation
+         */
+        @SerialName("companyInfo")
+        val companyInfo: CompanyInfo? = null,
+
+        /**
+         * Establishment company info - used for invoices or other places where Company info is printed
+         */
+        @SerialName("establishmentCompanyId")
+        val establishmentCompanyInfo: CompanyInfo? = null,
 
         /**
          * Source POS metadata
@@ -226,4 +246,46 @@ data class PosMigrationDto(
             }
         }
     }
+
+    @Serializable
+    data class CompanyInfo(
+        /**
+         * Company ID
+         */
+        @SerialName("companyId")
+        val companyId: String,
+
+        /**
+         * Company vat ID
+         */
+        @SerialName("vatId")
+        val vatId: String?,
+
+        /**
+         * Legal company name
+         */
+        @SerialName(WithName.SERIAL_NAME)
+        override val name: String,
+
+        /**
+         * Address lines (street with number, freeform text)
+         */
+        @SerialName("address")
+        val address: List<String>,
+
+        /**
+         * City
+         */
+        @SerialName("city")
+        val city: String,
+
+        /**
+         * ZIP code
+         */
+        @SerialName("zip")
+        val zip: String,
+
+        @SerialName(WithCountry.SERIALIZED_NAME)
+        override val country: String = WithCountry.DEFAULT_COUNTRY,
+    ): WithName, WithCountry
 }

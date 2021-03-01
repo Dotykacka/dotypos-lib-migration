@@ -4,5 +4,7 @@ import kotlinx.serialization.json.Json
 
 object MigrationSerializationUtil {
     val serializer = Json
-    val deserializer = Json
+    val deserializer = Json {
+        ignoreUnknownKeys = true
+    }
 }

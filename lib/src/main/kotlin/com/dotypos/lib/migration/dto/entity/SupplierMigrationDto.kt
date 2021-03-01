@@ -62,7 +62,7 @@ data class SupplierMigrationDto(
     val zip: String,
 
     @SerialName(WithCountry.SERIALIZED_NAME)
-    override val country: String,
+    override val country: String = WithCountry.DEFAULT_COUNTRY,
 
     @SerialName(WithEmail.SERIALIZED_NAME)
     override val email: String?,

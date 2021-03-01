@@ -27,7 +27,7 @@ data class PosConfigurationDto(
      * behavior changes are applied for different countries
      */
     @SerialName(WithCountry.SERIALIZED_NAME)
-    override val country: String,
+    override val country: String = WithCountry.DEFAULT_COUNTRY,
 
     /**
      * Default currency of POS in [ISO 4217 format](https://www.iso.org/iso-4217-currency-codes.html)

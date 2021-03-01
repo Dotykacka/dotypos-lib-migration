@@ -67,15 +67,33 @@ class DynamicDataCreator(
 
     override fun createPosData(): PosMigrationDto {
         val baseData = EmptyDemoDataCreator.createPosData()
+        val random = Random(seed)
 
         return baseData.copy(
             metadata = PosMigrationDto.Metadata(
                 migrationId = migrationId,
                 created = Date(System.currentTimeMillis() - 1L),
                 email = "john.doe@example.com",
+                phone = "+420775376444",
                 licenseKey = "EXAMPLE",
+                companyInfo = PosMigrationDto.CompanyInfo(
+                    companyId = "12345678",
+                    vatId = "CZ12345678",
+                    name = faker.company.name(),
+                    address = listOf(faker.address.streetAddress()),
+                    city = faker.address.city(),
+                    zip = faker.address.postcode(),
+                ),
+                establishmentCompanyInfo = PosMigrationDto.CompanyInfo(
+                    companyId = "00011122",
+                    vatId = "CZ00011122",
+                    name = faker.company.name(),
+                    address = listOf(faker.address.streetAddress()),
+                    city = faker.address.city(),
+                    zip = faker.address.postcode(),
+                ),
                 pos = PosMigrationDto.PosMetadata(
-                    id = "EMPTY",
+                    id = "${random.nextLong()}/${random.nextLong()}",
                 ),
             ),
             posConfiguration = baseData.posConfiguration.copy(
