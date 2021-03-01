@@ -3,6 +3,7 @@ package com.dotypos.lib.migration.demo.creator
 import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
 import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration
+import com.dotypos.lib.migration.dto.config.PosConfigurationDto
 import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.dto.enumerate.*
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
@@ -79,6 +80,14 @@ class DynamicDataCreator(
             ),
             posConfiguration = baseData.posConfiguration.copy(
                 czFiscalizationConfigurations = czFiscalizationConfigurations,
+                documentNumbering = PosConfigurationDto.DocumentNumberingConfiguration(
+                    receiptFormat = "%Y%m@6",
+                    receiptLastNumber = "202103000123",
+                    invoiceFormat = "I%Y%m@6",
+                    invoiceLastNumber = "I202103000123",
+                    cancellationInvoiceFormat = "CI%Y%m@6",
+                    cancellationInvoiceLastNumber = "CI202103000123",
+                )
             ),
             employees = employeesList.toSet(),
             sellers = emptySet(),
