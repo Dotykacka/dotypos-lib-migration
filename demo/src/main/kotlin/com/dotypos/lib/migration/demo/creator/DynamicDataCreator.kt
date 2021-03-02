@@ -9,13 +9,12 @@ import com.dotypos.lib.migration.dto.enumerate.*
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeePosPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeStockPermission
-import com.dotypos.lib.migration.util.KeystoreUtil
+import com.dotypos.lib.migration.extension.sha1hex
 import com.dotypos.lib.migration.util.KeystoreUtil.repackage
 import com.dotypos.lib.migration.util.KeystoreUtil.toBase64
 import io.github.serpro69.kfaker.Faker
 import io.github.serpro69.kfaker.FakerConfig
 import io.github.serpro69.kfaker.create
-import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -711,7 +710,7 @@ class DynamicDataCreator(
     private fun createCzFiscalizationConfiguration(id: Long, random: Random): CzFiscalizationConfiguration {
         val keystoreName = eetKeystores.keys.random()
         val keystore = eetKeystores[keystoreName] ?: throw IllegalStateException("No EET keystore found")
-        val newPassphrase = "$migrationId$EET_SALT"
+        val newPassphrase = "$migrationId$EET_SALT".sha1hex() ?: throw IllegalStateException("Can't create hash of password")
         return CzFiscalizationConfiguration(
             data = keystore.repackage("eet", newPassphrase).toBase64(newPassphrase),
             vatId = keystoreName,
