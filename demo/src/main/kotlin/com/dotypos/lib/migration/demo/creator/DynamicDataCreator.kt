@@ -84,14 +84,6 @@ class DynamicDataCreator(
                     city = faker.address.city(),
                     zip = faker.address.postcode(),
                 ),
-                establishmentCompanyInfo = PosMigrationDto.CompanyInfo(
-                    companyId = "00011122",
-                    vatId = "CZ00011122",
-                    name = faker.company.name(),
-                    address = listOf(faker.address.streetAddress()),
-                    city = faker.address.city(),
-                    zip = faker.address.postcode(),
-                ),
                 pos = PosMigrationDto.PosMetadata(
                     id = "${random.nextLong()}/${random.nextLong()}",
                 ),
