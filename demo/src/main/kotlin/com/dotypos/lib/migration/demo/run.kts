@@ -7,14 +7,30 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.valiktor.ConstraintViolationException
 import java.io.File
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 //TODO: Work in progress
 //TODO: Add script parameter handling for outputDir
 val outputDir = "output/"
+val jsonOutPutDir = "${outputDir}json/"
+val rawDir = "${jsonOutPutDir}raw/"
+val prettyDir = "${jsonOutPutDir}pretty/"
+val dirsToArchive = setOf(rawDir, prettyDir)
 val upload = true
 
 info { "Initializing..." }
+
+// Cleanup
+info { "Cleaning up output dirs" }
+dirsToArchive.forEach { path ->
+    File(path).deleteRecursively()
+    File(path).mkdirs()
+}
 
 val prettyJson = Json { prettyPrint = true }
 
@@ -25,10 +41,10 @@ DemoExportType.values().forEach { type ->
     if (creator is PosDataCreator) {
         progress("POS data (${type.name})") {
             try {
-                writeJson(creator.createPosData(), "$outputDir${type.id}-pos.pretty.json", prettyJson)
+                writeJson(creator.createPosData(), "${prettyDir}${type.id}-pos.json", prettyJson)
                 writeJson(
                     creator.createPosData(),
-                    "$outputDir${type.id}-pos.json",
+                    "$rawDir${type.id}-pos.json",
                     MigrationSerializationUtil.serializer
                 )
             } catch (e: ConstraintViolationException) {
@@ -41,10 +57,10 @@ DemoExportType.values().forEach { type ->
         progress("Cloud data (${type.name})") {
             try {
                 val cloudData = creator.createCloudData()
-                writeJson(cloudData, "$outputDir${type.id}-cloud.pretty.json", prettyJson)
+                writeJson(cloudData, "$prettyDir${type.id}-cloud.json", prettyJson)
                 writeJson(
                     cloudData,
-                    "$outputDir${type.id}-cloud.json",
+                    "$rawDir${type.id}-cloud.json",
                     MigrationSerializationUtil.serializer
                 )
             } catch (e: ConstraintViolationException) {
@@ -54,11 +70,14 @@ DemoExportType.values().forEach { type ->
     }
 }
 
+// Create archive
+createArchive()
+
 
 if (upload) {
     info { "Uploading migration file" }
     val devicePath = "/sdcard/Download/"
-    "adb push ${outputDir}restaurant-small-pos.json ${devicePath}migration.json".runCommand()
+    "adb push ${rawDir}restaurant-small-pos.json ${devicePath}migration.json".runCommand()
     System.exit(0)
 }
 
@@ -73,6 +92,10 @@ fun info(message: () -> String) {
 }
 
 fun debug(message: () -> String) {
+    System.out.println(message())
+}
+
+fun error(message: () -> String) {
     System.out.println(message())
 }
 
@@ -96,6 +119,45 @@ inline fun <reified T> writeJson(dataObject: T, path: String, json: Json) {
             .encodeToString(dataObject)
             .also(::writeText)
     }
+}
+
+fun createArchive() {
+    info { "Creating ZIP archive" }
+    val rootPath = FileSystems.getDefault().getPath(jsonOutPutDir)
+    val outputPath = FileSystems.getDefault().getPath("${outputDir}mock.zip")
+    try {
+        ZipOutputStream(Files.newOutputStream(outputPath)).use { outputStream ->
+            dirsToArchive
+                .map(::File)
+                .flatMap { it.walk() }
+                .filter { it.isFile }
+                .forEach { file ->
+                    val filePath = Paths.get(file.path)
+                    val entry = ZipEntry(rootPath.relativize(filePath).toString())
+                    outputStream.putNextEntry(entry)
+                    Files.copy(filePath, outputStream)
+                    outputStream.closeEntry()
+                }
+        }
+
+    } catch (e: Exception) {
+        e.printStackTrace()
+        error { "Can't create ZIP file" }
+    }
+
+
+    /*val outputStream = File("${outputDir}mock.zip")
+        .let(::FileOutputStream)
+        .let(::ZipOutputStream)
+
+    dirsToArchive
+        .map(::File)
+        .flatMap { it.walk() }
+        .filter { it.isFile }
+        .forEach { file ->
+            val parent
+            val entry = ZipEntry(file.name)
+        }*/
 }
 
 fun String.bold() = "\u001b[1m$this\u001B[0m"
