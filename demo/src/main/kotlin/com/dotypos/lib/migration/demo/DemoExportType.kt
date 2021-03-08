@@ -1,8 +1,8 @@
 package com.dotypos.lib.migration.demo
 
 import com.dotypos.lib.migration.demo.creator.DataCreator
-import com.dotypos.lib.migration.demo.creator.EmptyDemoDataCreator
 import com.dotypos.lib.migration.demo.creator.DynamicDataCreator
+import com.dotypos.lib.migration.demo.creator.EmptyDemoDataCreator
 
 enum class DemoExportType(val id: String, val makeCreator: () -> DataCreator) {
     EMPTY("empty", makeCreator = { EmptyDemoDataCreator }),
@@ -41,7 +41,7 @@ enum class DemoExportType(val id: String, val makeCreator: () -> DataCreator) {
                 warehouses = 1,
                 suppliers = 20,
                 printers = 1,
-                documents = 20_000,
+                documents = 70_000,
             )
         },
     ),
