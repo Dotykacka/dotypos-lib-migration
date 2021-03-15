@@ -3,6 +3,7 @@ package com.dotypos.lib.migration.demo
 import com.dotypos.lib.migration.demo.creator.CloudDataCreator
 import com.dotypos.lib.migration.demo.creator.PosDataCreator
 import com.dotypos.lib.migration.util.MigrationSerializationUtil
+import heapInfo
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.valiktor.ConstraintViolationException
@@ -37,6 +38,7 @@ val prettyJson = Json { prettyPrint = true }
 DemoExportType.values().forEach { type ->
     info { "Creating ${"${type.id} export".bold()}..." }
     System.gc()
+    info { "Heap info: $heapInfo" }
     val creator = type.makeCreator()
     if (creator is PosDataCreator) {
         progress("POS data (${type.name})") {

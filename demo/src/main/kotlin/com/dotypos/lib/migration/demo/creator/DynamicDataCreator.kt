@@ -47,8 +47,8 @@ class DynamicDataCreator(
 
     // POS DATA
     private val migrationId = "DEMO$${Date()}"
-    private val cloudId = "123"
-    private val branchId = "321"
+    private val cloudId = "337030026"
+    private val branchId = "129614700"
     private val employeesList by randomList(employees, ::createEmployee)
     private val categoryList by randomList(categories, ::createCategory)
     private val productList by randomList(products, ::createProduct)
@@ -353,7 +353,7 @@ class DynamicDataCreator(
         }
 
         return baseData.copy(
-            migrationResultData = "$cloudId-$branchId-metadata",
+            migrationResultData = "1|$cloudId|$branchId",
             documents = documentList,
             moneyOperations = moneyOperations,
             stockTransactions = stockTransactions,
@@ -732,7 +732,7 @@ class DynamicDataCreator(
     private fun randomLorem(words: Int) = List(words) { faker.lorem.words() }.joinToString(separator = " ")
 
     private fun Random.nextBigDecimal(min: Int = 0, max: Int = Int.MAX_VALUE, decimals: Int = 2): BigDecimal {
-        if (min <= max) {
+        if (min >= max) {
             return BigDecimal(min)
         }
         return BigDecimal(nextLong(min.toLong(), max.toLong()) / 10.0.pow(decimals))
