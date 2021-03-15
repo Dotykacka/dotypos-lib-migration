@@ -73,6 +73,12 @@ data class DocumentMarkeetaMigrationDto (
     @SerialName("dueDate")
     val dueDate: Date,
 
+    /**
+     * Payment schedule data. Required only for document type PAYMENT_SCHEDULE.
+     */
+    @SerialName("paymentSchedule")
+    val paymentSchedule: PaymentSchedule?,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithName {
@@ -95,4 +101,64 @@ data class DocumentMarkeetaMigrationDto (
         @SerialName("payment_schedule")
         PAYMENT_SCHEDULE,
     }
+
+    /**
+     * Info about document of type PAYMENT_SCHEDULE.
+     */
+    @Serializable
+    data class PaymentSchedule (
+        /**
+         * Number of payments (in months) of the payment schedule.
+         */
+        @SerialName("totalPaymentsCount")
+        val totalPaymentsCount: Long,
+
+        /**
+         * Price per month.
+         */
+        @SerialName("monthPrice")
+        val monthPrice: BigDecimal,
+
+        /**
+         * Total paid amount.
+         */
+        @SerialName("paidAmount")
+        val paidAmount: BigDecimal,
+
+        /**
+         * Amount left to pay.
+         */
+        @SerialName("leftToPay")
+        val leftToPay: BigDecimal,
+
+        /**
+         * Date of last payment.
+         */
+        @SerialName("lastPaymentDate")
+        val lastPaymentDate: Date,
+
+        /**
+         * Date of next payment.
+         */
+        @SerialName("nextPaymentDate")
+        val nextPaymentDate: Date,
+
+        /**
+         * Expiration date.
+         */
+        @SerialName("expirationDate")
+        val expirationDate: Date,
+
+        /**
+         * Number of bank account.
+         */
+        @SerialName("bankAccountNumber")
+        val bankAccountNumber: String,
+
+        /**
+         * Id of the terminal in Markeeta to which the payment schedule binds.
+         */
+        @SerialName("terminalIdMarkeeta")
+        val terminalIdMarkeeta: Long?,
+    )
 }

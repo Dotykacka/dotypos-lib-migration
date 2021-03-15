@@ -58,6 +58,12 @@ data class ServiceMarkeetaMigrationDto (
     @SerialName("simIccid")
     val simIccid: String?,
 
+    /**
+     * Id of the terminal in Markeeta to which the service binds.
+     */
+    @SerialName("terminalIdMarkeeta")
+    val terminalIdMarkeeta: Long?,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithName
