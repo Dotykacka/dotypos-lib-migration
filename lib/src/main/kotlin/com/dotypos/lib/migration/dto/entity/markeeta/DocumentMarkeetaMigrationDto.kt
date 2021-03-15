@@ -6,6 +6,7 @@
 package com.dotypos.lib.migration.dto.entity.markeeta
 
 import com.dotypos.lib.migration.dto.entity.BaseEntityDto
+import com.dotypos.lib.migration.dto.entity.iface.WithCurrency
 import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
@@ -131,6 +132,9 @@ data class DocumentMarkeetaMigrationDto (
         @SerialName("leftToPay")
         val leftToPay: BigDecimal,
 
+        @SerialName(WithCurrency.SERIALIZED_NAME)
+        override val currency: String,
+
         /**
          * Date of last payment.
          */
@@ -160,5 +164,5 @@ data class DocumentMarkeetaMigrationDto (
          */
         @SerialName("terminalIdMarkeeta")
         val terminalIdMarkeeta: Long?,
-    )
+    ): WithCurrency
 }

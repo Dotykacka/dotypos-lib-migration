@@ -75,10 +75,10 @@ data class LicenseMarkeetaMigrationDto (
     val note: String?,
 
     /**
-     * Provision partner.
+     * Commission partner.
      */
-    @SerialName("provisionPartner")
-    val provisionPartner: ProvisionPartner?,
+    @SerialName("commissionPartner")
+    val commissionPartner: CommissionPartner?,
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
@@ -88,7 +88,7 @@ data class LicenseMarkeetaMigrationDto (
      * Data about partner, who is paid provisions by license.
      */
     @Serializable
-    data class ProvisionPartner (
+    data class CommissionPartner (
         @SerialName(WithName.SERIAL_NAME)
         override val name: String,
 
