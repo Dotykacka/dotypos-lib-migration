@@ -6,9 +6,7 @@
 package com.dotypos.lib.migration.dto.entity.markeeta
 
 import com.dotypos.lib.migration.dto.entity.BaseEntityDto
-import com.dotypos.lib.migration.dto.entity.iface.WithCurrency
-import com.dotypos.lib.migration.dto.entity.iface.WithId
-import com.dotypos.lib.migration.dto.entity.iface.WithVersion
+import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
@@ -76,6 +74,67 @@ data class LicenseMarkeetaMigrationDto (
     @SerialName("note")
     val note: String?,
 
+    /**
+     * Commission partner.
+     */
+    @SerialName("commissionPartner")
+    val commissionPartner: CommissionPartner?,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), WithCurrency
+) : BaseEntityDto(), WithCurrency {
+
+    /**
+     * Data about partner, who is paid provisions by license.
+     */
+    @Serializable
+    data class CommissionPartner (
+        @SerialName(WithName.SERIAL_NAME)
+        override val name: String,
+
+        /**
+         * Partner code in Markeeta.
+         */
+        @SerialName("code")
+        val code: String,
+
+        /**
+         * Partner company ID = (IČ in CZ)
+         */
+        @SerialName("companyId")
+        val companyId: String,
+
+        /**
+         * Partner vat ID = (DIČ in CZ)
+         */
+        @SerialName("vatId")
+        val vatId: String?,
+
+        @SerialName(WithEmail.SERIALIZED_NAME)
+        override val email: String?,
+
+        @SerialName(WithPhone.SERIALIZED_NAME)
+        override val phone: String?,
+
+        /**
+         * Street.
+         */
+        @SerialName("street")
+        val street: String,
+
+        /**
+         * City.
+         */
+        @SerialName("city")
+        val city: String,
+
+        /**
+         * ZIP code.
+         */
+        @SerialName("zipCode")
+        val zipCode: String,
+
+        @SerialName(WithCountry.SERIALIZED_NAME)
+        override val country: String,
+    ) : WithName, WithEmail, WithPhone, WithCountry
+}
