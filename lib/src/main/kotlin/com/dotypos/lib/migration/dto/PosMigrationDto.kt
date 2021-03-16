@@ -187,13 +187,19 @@ data class PosMigrationDto(
         val created: Date,
 
         /**
+         * Name and surname of user (Administrator) - used to prefill in Dotypos Setup Guide
+         */
+        @SerialName("name")
+        val name: String? = null,
+
+        /**
          * Registration email of user (Administrator) - used to prefill in Dotypos Setup Guide
          */
         @SerialName("email")
         val email: String?,
 
         /**
-         * Phone number of user (Administrator) - used to prefil in Dotypos Setup Guide
+         * Phone number of user (Administrator) - used to prefill in Dotypos Setup Guide
          */
         @SerialName("phone")
         val phone: String? = null,
