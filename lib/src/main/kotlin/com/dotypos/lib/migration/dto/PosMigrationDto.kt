@@ -287,5 +287,5 @@ data class PosMigrationDto(
 
         @SerialName(WithCountry.SERIALIZED_NAME)
         override val country: String = WithCountry.DEFAULT_COUNTRY,
-    ): WithName, WithCountry
+    ) : WithName, WithCountry
 }

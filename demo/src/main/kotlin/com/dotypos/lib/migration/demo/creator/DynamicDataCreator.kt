@@ -1,5 +1,6 @@
 package com.dotypos.lib.migration.demo.creator
 
+import com.dotypos.lib.migration.demo.Configuration
 import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
 import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration
@@ -23,6 +24,7 @@ import kotlin.math.pow
 import kotlin.random.Random
 
 class DynamicDataCreator(
+    private val config: Configuration,
     private val seed: Long,
     private val employees: Int = 20,
     private val products: Int = 30_000,
@@ -47,8 +49,6 @@ class DynamicDataCreator(
 
     // POS DATA
     private val migrationId = "DEMO$${Date()}"
-    private val cloudId = "337030026"
-    private val branchId = "129614700"
     private val employeesList by randomList(employees, ::createEmployee)
     private val categoryList by randomList(categories, ::createCategory)
     private val productList by randomList(products, ::createProduct)
@@ -72,9 +72,10 @@ class DynamicDataCreator(
             metadata = PosMigrationDto.Metadata(
                 migrationId = migrationId,
                 created = Date(System.currentTimeMillis() - 1L),
-                email = "john.doe@example.com",
-                phone = "+420775376444",
-                licenseKey = "EXAMPLE",
+                name = config.name,
+                email = config.email,
+                phone = config.phone,
+                licenseKey = config.licenseKey,
                 companyInfo = PosMigrationDto.CompanyInfo(
                     companyId = "12345678",
                     vatId = "CZ12345678",
@@ -353,7 +354,7 @@ class DynamicDataCreator(
         }
 
         return baseData.copy(
-            migrationResultData = "1|$cloudId|$branchId",
+            migrationResultData = "1|$config.cloudId|$config.branchId",
             documents = documentList,
             moneyOperations = moneyOperations,
             stockTransactions = stockTransactions,
@@ -433,7 +434,7 @@ class DynamicDataCreator(
         comparableMeasurement = null,
         ean = emptyList(),
         plu = emptyList(),
-        unitPriceWithVat = random.nextBigDecimal(max = 30_000),
+        unitPriceWithVat = random.nextBigDecimal(max = 30_000, decimals = 0) + BigDecimal("0.90"),
         vatRate = vatRates.random(random),
         points = BigDecimal.ZERO,
         priceInPoints = BigDecimal.ZERO,
@@ -624,12 +625,14 @@ class DynamicDataCreator(
             }
             PrinterConnectionMode.INTERNAL_SUNMI_V1,
             PrinterConnectionMode.INTERNAL_SUNMI_V2,
-            PrinterConnectionMode.INTERNAL_LANDI_A8 -> "local"
+            PrinterConnectionMode.INTERNAL_LANDI_A8,
+            -> "local"
         }
         val largePrinter = when (connectionMode) {
             PrinterConnectionMode.INTERNAL_SUNMI_V1,
             PrinterConnectionMode.INTERNAL_SUNMI_V2,
-            PrinterConnectionMode.INTERNAL_LANDI_A8 -> false
+            PrinterConnectionMode.INTERNAL_LANDI_A8,
+            -> false
             else -> random.nextBoolean()
         }
 
@@ -710,7 +713,8 @@ class DynamicDataCreator(
     private fun createCzFiscalizationConfiguration(id: Long, random: Random): CzFiscalizationConfiguration {
         val keystoreName = eetKeystores.keys.random()
         val keystore = eetKeystores[keystoreName] ?: throw IllegalStateException("No EET keystore found")
-        val newPassphrase = "$migrationId$EET_SALT".sha1hex() ?: throw IllegalStateException("Can't create hash of password")
+        val newPassphrase =
+            "$migrationId$EET_SALT".sha1hex() ?: throw IllegalStateException("Can't create hash of password")
         return CzFiscalizationConfiguration(
             data = keystore.repackage("eet", newPassphrase).toBase64(newPassphrase),
             vatId = keystoreName,

@@ -4,11 +4,15 @@ import com.dotypos.lib.migration.demo.creator.DataCreator
 import com.dotypos.lib.migration.demo.creator.DynamicDataCreator
 import com.dotypos.lib.migration.demo.creator.EmptyDemoDataCreator
 
-enum class DemoExportType(val id: String, val makeCreator: () -> DataCreator) {
+enum class DemoExportType(
+    val id: String,
+    val makeCreator: (config: Configuration) -> DataCreator,
+) {
     RESTAURANT(
         "restaurant",
         makeCreator = {
             DynamicDataCreator(
+                config = it,
                 seed = 0,
                 employees = 80,
                 products = 300,
@@ -27,8 +31,9 @@ enum class DemoExportType(val id: String, val makeCreator: () -> DataCreator) {
         },
     ),
     EMPTY("empty", makeCreator = { EmptyDemoDataCreator }),
-    RESTAURANT_SMALL("restaurant-small", makeCreator = {
+    RESTAURANT_SMALL("restaurant-small", makeCreator = { config ->
         DynamicDataCreator(
+            config = config,
             seed = 0,
             employees = 80,
             products = 300,
@@ -46,8 +51,9 @@ enum class DemoExportType(val id: String, val makeCreator: () -> DataCreator) {
         )
     }),
     ESHOP(
-        "eshop", makeCreator = {
+        "eshop", makeCreator = { config ->
             DynamicDataCreator(
+                config = config,
                 seed = 0,
                 categories = 300,
                 products = 50_000,
