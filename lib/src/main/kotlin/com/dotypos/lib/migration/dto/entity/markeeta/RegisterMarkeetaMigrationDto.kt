@@ -11,7 +11,7 @@ import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import java.util.Date
+import java.util.*
 
 /**
  * Data about company from public company register.

@@ -7,8 +7,12 @@ package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
+import com.dotypos.lib.migration.dto.validation.isValidIdOrNull
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -58,6 +62,12 @@ data class StockTransactionMigrationDto(
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long
 ) : BaseEntityDto() {
+
+    init {
+        validateId()
+        validationOf(StockTransactionMigrationDto::supplierId).isValidIdOrNull()
+        validateVersion()
+    }
 
     @Serializable
     enum class Type {

@@ -5,6 +5,12 @@ import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
 import com.dotypos.lib.migration.dto.enumerate.PrinterConnectionMode
+import com.dotypos.lib.migration.dto.validation.requireName
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
+import com.dotypos.validator.validation.isGreaterThan
+import com.dotypos.validator.validation.isGreaterThanOrEqualTo
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -91,6 +97,16 @@ data class PrinterMigrationDto(
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithName, Deletable {
+
+    init {
+        validateId()
+        requireName()
+        validationOf(PrinterMigrationDto::charactersFontA).isGreaterThan(0)
+        validationOf(PrinterMigrationDto::charactersFontB).isGreaterThan(0)
+        validationOf(PrinterMigrationDto::appendLines).isGreaterThanOrEqualTo(0)
+        validateVersion()
+    }
+
     companion object {
         const val DEFAULT_ENCODING = "cp852"
         const val DEFAULT_CODEPAGE = 18

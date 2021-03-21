@@ -1,6 +1,9 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
+import com.dotypos.lib.migration.dto.validation.*
+import com.dotypos.validator.validation.isGreaterThanOrEqualTo
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -60,6 +63,18 @@ data class TableMigrationDto(
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithName, Deletable, SellerRelated, WithTags {
+
+    init {
+        validateId()
+        validateSellerId()
+        validationOf(TableMigrationDto::tablePageId).isValidId()
+        requireName()
+        validationOf(TableMigrationDto::seats).isGreaterThanOrEqualTo(0)
+        validationOf(TableMigrationDto::positionX).isGreaterThanOrEqualTo(0)
+        validationOf(TableMigrationDto::positionY).isGreaterThanOrEqualTo(0)
+        validationOf(TableMigrationDto::rotation)
+        validateVersion()
+    }
 
     /**
      * List of available table types

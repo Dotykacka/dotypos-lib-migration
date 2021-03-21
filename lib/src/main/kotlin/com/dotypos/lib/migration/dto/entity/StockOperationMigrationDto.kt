@@ -5,10 +5,13 @@
 
 package com.dotypos.lib.migration.dto.entity
 
+import com.dotypos.lib.migration.dto.entity.StockOperationMigrationDto.Type
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -86,7 +89,7 @@ data class StockOperationMigrationDto(
      * Only primary currency of POS supported
      */
     @SerialName(WithCurrency.SERIALIZED_NAME)
-    val currency: String,
+    override val currency: String,
 
     /**
      * Stock transaction note - used primary for purchases or write-off.
@@ -102,7 +105,18 @@ data class StockOperationMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), WithEmployee, WithMeasurementUnit, SellerRelated {
+) : BaseEntityDto(), WithEmployee, WithMeasurementUnit, SellerRelated, WithCurrency {
+
+    init {
+        validateId()
+        validationOf(StockOperationMigrationDto::productId).isValidId()
+        validationOf(StockOperationMigrationDto::warehouseId).isValidId()
+        validationOf(StockOperationMigrationDto::employeeId).isValidId()
+        validationOf(StockOperationMigrationDto::sellerId).isValidIdOrNull()
+        validationOf(StockOperationMigrationDto::documentId).isValidIdOrNull()
+        validateCurrency()
+        validateVersion()
+    }
 
     @Serializable
     enum class Type {

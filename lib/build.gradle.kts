@@ -19,9 +19,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
     // Entity validation
-    api("org.valiktor:valiktor-core:0.12.0")
+    api(project(":validator"))
 
-    // Documentation
+    // Testing
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")

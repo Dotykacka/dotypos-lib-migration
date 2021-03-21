@@ -9,6 +9,7 @@ import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeePosPermission
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeStockPermission
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
@@ -97,6 +98,14 @@ data class EmployeeMigrationDto(
     SellerRelated,
     Enablable,
     Deletable {
+
+    init {
+        validateId()
+        requireName()
+        validateColor()
+        validateSellerId()
+        validateVersion()
+    }
 
     @Serializable
     data class PinWrapper(

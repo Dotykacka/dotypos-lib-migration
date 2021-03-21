@@ -5,19 +5,18 @@
 
 package com.dotypos.lib.migration.dto.entity
 
+import com.dotypos.lib.migration.dto.entity.ProductMigrationDto.ComparableMeasurement
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
-import com.dotypos.lib.migration.dto.enumerate.feature.ProductFeature
 import com.dotypos.lib.migration.dto.enumerate.ProductStockOverdraftBehavior
-import com.dotypos.lib.migration.dto.validation.isValidId
+import com.dotypos.lib.migration.dto.enumerate.feature.ProductFeature
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.isNotEmpty
-import org.valiktor.functions.isPositiveOrZero
-import org.valiktor.validate
 import java.math.BigDecimal
 
 @Serializable
@@ -184,12 +183,11 @@ data class ProductMigrationDto(
     Deletable {
 
     init {
-        validate(this) {
-            validate(ProductMigrationDto::id).isValidId()
-            validate(ProductMigrationDto::name).isNotEmpty()
-            // TODO: printName null || not empty validation
-            validate(ProductMigrationDto::version).isPositiveOrZero()
-        }
+        validateId()
+        validationOf(ProductMigrationDto::categoryId).isValidId()
+        requireName()
+        validateColor()
+        validateVersion()
     }
 
     /**

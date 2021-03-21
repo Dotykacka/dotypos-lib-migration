@@ -1,6 +1,9 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
+import com.dotypos.lib.migration.dto.validation.requireName
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -35,4 +38,10 @@ data class OnBehalfSaleSubjectMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), WithName, Deletable, Enablable
+) : BaseEntityDto(), WithName, Deletable, Enablable {
+    init {
+        validateId()
+        requireName()
+        validateVersion()
+    }
+}

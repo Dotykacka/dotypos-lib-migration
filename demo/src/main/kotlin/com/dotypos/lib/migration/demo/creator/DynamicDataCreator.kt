@@ -600,7 +600,7 @@ class DynamicDataCreator(
             ),
             city = faker.address.city(),
             zip = faker.address.postcode(),
-            country = "",
+            country = faker.address.countryCode(),
             email = random.valueOrNull(2, faker.internet::email),
             phone = random.valueOrNull(3, faker.phoneNumber::cellPhone),
             isDeleted = false,

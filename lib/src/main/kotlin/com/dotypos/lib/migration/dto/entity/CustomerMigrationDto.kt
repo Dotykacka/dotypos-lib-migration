@@ -6,6 +6,10 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
+import com.dotypos.lib.migration.dto.validation.validateCountry
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateSellerId
+import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
@@ -123,4 +127,11 @@ data class CustomerMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), SellerRelated, WithTags, WithEmail, WithPhone, WithCountry, Deletable
+) : BaseEntityDto(), SellerRelated, WithTags, WithEmail, WithPhone, WithCountry, Deletable {
+    init {
+        validateId()
+        validateCountry()
+        validateSellerId()
+        validateVersion()
+    }
+}

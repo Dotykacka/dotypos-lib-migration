@@ -1,8 +1,15 @@
 package com.dotypos.lib.migration.dto.entity
 
+import com.dotypos.lib.migration.dto.entity.PrintTaskMigrationDto.Companion.DEFAULT_PRINT_LOCALE
+import com.dotypos.lib.migration.dto.entity.PrintTaskMigrationDto.TagItemPrintFilter
 import com.dotypos.lib.migration.dto.entity.iface.WithId
 import com.dotypos.lib.migration.dto.entity.iface.WithVersion
 import com.dotypos.lib.migration.dto.enumerate.PrintTaskType
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
+import com.dotypos.validator.validation.isGreaterThanOrEqualTo
+import com.dotypos.validator.validation.isValidBase64OrNull
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -62,6 +69,13 @@ data class PrintTaskMigrationDto(
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long
 ) : BaseEntityDto() {
+
+    init {
+        validateId()
+        validationOf(PrintTaskMigrationDto::logo).isValidBase64OrNull()
+        validationOf(PrintTaskMigrationDto::copies).isGreaterThanOrEqualTo(0)
+        validateVersion()
+    }
 
     companion object {
         const val DEFAULT_PRINT_LOCALE = "default"

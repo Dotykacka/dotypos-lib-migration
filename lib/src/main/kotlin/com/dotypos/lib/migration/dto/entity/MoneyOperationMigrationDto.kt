@@ -7,13 +7,16 @@ package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.PaymentMethod
+import com.dotypos.lib.migration.dto.validation.validateCurrency
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validation.hasSize
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.hasSize
-import org.valiktor.validate
 import java.math.BigDecimal
 import java.util.*
 
@@ -99,10 +102,10 @@ data class MoneyOperationMigrationDto(
 ) : BaseEntityDto(), SellerRelated, WithCurrency, WithTags {
 
     init {
-        validate(this) {
-            validate(MoneyOperationMigrationDto::currency).hasSize(min = 3, max=3)
-            validate(MoneyOperationMigrationDto::note).hasSize(max = 1000)
-        }
+        validateId()
+        validateCurrency()
+        validationOf(MoneyOperationMigrationDto::note).hasSize(max = 1000)
+        validateVersion()
     }
 
     @Serializable
@@ -154,12 +157,10 @@ data class MoneyOperationMigrationDto(
     ) {
 
         init {
-            validate(this) {
-                validate(CardPaymentData::provider).hasSize(max = 100)
-                validate(CardPaymentData::merchantId).hasSize(max = 100)
-                validate(CardPaymentData::payerId).hasSize(max = 100)
-                validate(CardPaymentData::transactionCode).hasSize(max = 100)
-            }
+            validationOf(CardPaymentData::provider).hasSize(max = 100)
+            validationOf(CardPaymentData::merchantId).hasSize(max = 100)
+            validationOf(CardPaymentData::payerId).hasSize(max = 100)
+            validationOf(CardPaymentData::transactionCode).hasSize(max = 100)
         }
 
         companion object {

@@ -1,14 +1,14 @@
 package com.dotypos.lib.migration.dto.config
 
+import com.dotypos.lib.migration.dto.config.PosConfigurationDto.DocumentNumberingConfiguration.Companion.NUMBERING_FORMAT_REGEX
 import com.dotypos.lib.migration.dto.entity.iface.WithCountry
 import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.enumerate.PaymentMethod
+import com.dotypos.validator.validation.matches
+import com.dotypos.validator.validation.matchesOrNull
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.valiktor.functions.isNull
-import org.valiktor.functions.isValid
-import org.valiktor.functions.matches
-import org.valiktor.validate
 
 @Serializable
 data class PosConfigurationDto(
@@ -195,23 +195,23 @@ data class PosConfigurationDto(
         val cancellationInvoiceLastNumber: String?,
     ) {
         init {
-            validate(this) {
-                validate(DocumentNumberingConfiguration::receiptFormat).matches(NUMBERING_FORMAT_REGEX)
-                validate(DocumentNumberingConfiguration::receiptLastNumber).matches(
-                    createNumberingFormatValidationRegex(receiptFormat)
+            validationOf(DocumentNumberingConfiguration::receiptFormat)
+                .matches(NUMBERING_FORMAT_REGEX)
+            validationOf(DocumentNumberingConfiguration::receiptLastNumber)
+                .matches(createNumberingFormatValidationRegex(receiptFormat))
+            if (invoiceFormat != null) {
+                validationOf(DocumentNumberingConfiguration::invoiceFormat)
+                    .matchesOrNull(NUMBERING_FORMAT_REGEX)
+                validationOf(DocumentNumberingConfiguration::invoiceLastNumber).matchesOrNull(
+                    createNumberingFormatValidationRegex(invoiceFormat)
                 )
-                validate(DocumentNumberingConfiguration::invoiceFormat).matches(NUMBERING_FORMAT_REGEX)
-                if (invoiceFormat != null) {
-                    validate(DocumentNumberingConfiguration::invoiceLastNumber).matches(
-                        createNumberingFormatValidationRegex(invoiceFormat)
-                    )
-                }
-                validate(DocumentNumberingConfiguration::cancellationInvoiceFormat).matches(NUMBERING_FORMAT_REGEX)
-                if (cancellationInvoiceFormat != null) {
-                    validate(DocumentNumberingConfiguration::cancellationInvoiceLastNumber).matches(
-                        createNumberingFormatValidationRegex(cancellationInvoiceFormat)
-                    )
-                }
+            }
+            if (cancellationInvoiceFormat != null) {
+                validationOf(DocumentNumberingConfiguration::cancellationInvoiceFormat)
+                    .matchesOrNull(NUMBERING_FORMAT_REGEX)
+                validationOf(DocumentNumberingConfiguration::cancellationInvoiceLastNumber).matchesOrNull(
+                    createNumberingFormatValidationRegex(cancellationInvoiceFormat)
+                )
             }
         }
 

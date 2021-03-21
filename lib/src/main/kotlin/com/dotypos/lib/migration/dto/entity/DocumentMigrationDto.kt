@@ -7,13 +7,18 @@ package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.CzFiscalizationConstraints
 import com.dotypos.lib.migration.dto.entity.iface.*
+import com.dotypos.lib.migration.dto.validation.isValidIdOrNull
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateSellerId
+import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validation.matches
+import com.dotypos.validator.validation.matchesOrNull
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.matches
-import org.valiktor.validate
 import java.math.BigDecimal
 import java.util.*
 
@@ -186,6 +191,16 @@ data class DocumentMigrationDto(
     override val version: Long,
 ) : BaseEntityDto(), SellerRelated, WithTags, WithCurrency {
 
+    init {
+        validateId()
+        validationOf(DocumentMigrationDto::relatedDocumentId).isValidIdOrNull()
+        validationOf(DocumentMigrationDto::tableId).isValidIdOrNull()
+        validationOf(DocumentMigrationDto::customerId).isValidIdOrNull()
+        validationOf(DocumentMigrationDto::employeeId).isValidIdOrNull()
+        validateSellerId()
+        validateVersion()
+    }
+
     @Serializable
     enum class Type(
         val isInvoice: Boolean,
@@ -290,15 +305,10 @@ data class DocumentMigrationDto(
         val bkp: String?,
     ) {
         init {
-            validate(this) {
-                validate(CzFiscalizationData::businessPremissesId)
-                    .matches(CzFiscalizationConstraints.BUSINESS_PREMISES_ID_FORMAT)
-                validate(CzFiscalizationData::cashRegisterId)
-                    .matches(CzFiscalizationConstraints.CASH_REGISTER_ID_FORMAT)
-                // TODO: Validate for presenting at least one of fik/bpk and then validate the format
-                //validate(CzFiscalizationData::fik).matches(CzFiscalizationConstraints.FIK_FORMAT)
-                //validate(CzFiscalizationData::bkp).matches(CzFiscalizationConstraints.BKP_FORMAT)
-            }
+            validationOf(CzFiscalizationData::businessPremissesId).matches(CzFiscalizationConstraints.BUSINESS_PREMISES_ID_FORMAT)
+            validationOf(CzFiscalizationData::cashRegisterId).matches(CzFiscalizationConstraints.CASH_REGISTER_ID_FORMAT)
+            validationOf(CzFiscalizationData::fik).matchesOrNull(CzFiscalizationConstraints.FIK_FORMAT)
+            validationOf(CzFiscalizationData::bkp).matchesOrNull(CzFiscalizationConstraints.BKP_FORMAT)
         }
 
         /**

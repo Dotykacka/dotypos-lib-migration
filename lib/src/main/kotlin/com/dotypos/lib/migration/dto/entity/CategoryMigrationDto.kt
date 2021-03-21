@@ -6,16 +6,13 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.entity.iface.*
-import com.dotypos.lib.migration.dto.validation.isValidId
-import com.dotypos.lib.migration.dto.validation.requireValidId
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.isNotEmpty
-import org.valiktor.functions.isPositiveOrZero
-import org.valiktor.validate
 import java.math.BigDecimal
 
 /**
@@ -79,11 +76,10 @@ data class CategoryMigrationDto(
     Deletable {
 
     init {
-        requireValidId(CategoryMigrationDto::id)
-        validate(this) {
-            validate(CategoryMigrationDto::id).isValidId()
-            validate(CategoryMigrationDto::name).isNotEmpty()
-            validate(CategoryMigrationDto::version).isPositiveOrZero()
-        }
+        validateId()
+        requireName()
+        validateColor()
+        validationOf(CategoryMigrationDto::defaultCourseId).isValidIdOrNull()
+        validateVersion()
     }
 }

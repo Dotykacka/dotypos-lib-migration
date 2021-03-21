@@ -1,7 +1,5 @@
 package com.dotypos.lib.migration.dto.entity.iface
 
-import kotlinx.serialization.SerialName
-
 /**
  * Used for entities which can be hidden from sale point of view
  */

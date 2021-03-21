@@ -5,14 +5,17 @@
 
 package com.dotypos.lib.migration.dto.entity
 
-import com.dotypos.lib.migration.serialization.BigDecimalSerializer
-import com.dotypos.lib.migration.serialization.DateSerializer
-import kotlinx.serialization.UseSerializers
-
 
 import com.dotypos.lib.migration.dto.entity.iface.*
+import com.dotypos.lib.migration.dto.validation.requireName
+import com.dotypos.lib.migration.dto.validation.validateCountry
+import com.dotypos.lib.migration.dto.validation.validateId
+import com.dotypos.lib.migration.dto.validation.validateVersion
+import com.dotypos.lib.migration.serialization.BigDecimalSerializer
+import com.dotypos.lib.migration.serialization.DateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class SupplierMigrationDto(
@@ -75,4 +78,11 @@ data class SupplierMigrationDto(
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
-) : BaseEntityDto(), WithEmail, WithPhone, WithName, WithCountry, Deletable
+) : BaseEntityDto(), WithEmail, WithPhone, WithName, WithCountry, Deletable {
+    init {
+        validateId()
+        requireName()
+        validateCountry()
+        validateVersion()
+    }
+}

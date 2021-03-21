@@ -5,10 +5,15 @@
 
 package com.dotypos.lib.migration.dto.entity
 
+import com.dotypos.lib.migration.dto.entity.DocumentItemMigrationDto.Companion.SIMPLE_SALE_CATEGORY_ID
+import com.dotypos.lib.migration.dto.entity.DocumentItemMigrationDto.Companion.SIMPLE_SALE_PRODUCT_ID
+import com.dotypos.lib.migration.dto.entity.DocumentItemMigrationDto.Type
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.enumerate.MigrationMeasurementUnit
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -179,6 +184,17 @@ data class DocumentItemMigrationDto(
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long = WithVersion.DEFAULT_VALUE,
 ) : BaseEntityDto(), WithName, WithCustomPrintName, WithColor, WithMeasurementUnit, WithTags {
+
+    init {
+        validateId()
+        validationOf(DocumentItemMigrationDto::productId).isValidId()
+        validationOf(DocumentItemMigrationDto::categoryId).isValidId()
+        validationOf(DocumentItemMigrationDto::relatedDocumentItemId).isValidIdOrNull()
+        validationOf(DocumentItemMigrationDto::courseId).isValidIdOrNull()
+        requireName()
+        validateColor()
+        validateVersion()
+    }
 
     @Serializable
     enum class Type {

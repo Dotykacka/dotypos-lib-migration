@@ -3,10 +3,10 @@ package com.dotypos.lib.migration.demo
 import com.dotypos.lib.migration.demo.creator.CloudDataCreator
 import com.dotypos.lib.migration.demo.creator.PosDataCreator
 import com.dotypos.lib.migration.util.MigrationSerializationUtil
+import com.dotypos.validator.ValidationError
 import heapInfo
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.valiktor.ConstraintViolationException
 import java.io.File
 import java.nio.file.FileSystems
 import java.nio.file.Files
@@ -50,8 +50,8 @@ class App(private val configuration: Configuration) {
                             "$rawDir${type.id}-pos.json",
                             MigrationSerializationUtil.serializer
                         )
-                    } catch (e: ConstraintViolationException) {
-                        System.err.println(e.constraintViolations.toString())
+                    } catch (e: ValidationError) {
+                        System.err.println(e.toString())
                     }
                 }
             }
@@ -66,8 +66,8 @@ class App(private val configuration: Configuration) {
                             "$rawDir${type.id}-cloud.json",
                             MigrationSerializationUtil.serializer
                         )
-                    } catch (e: ConstraintViolationException) {
-                        System.err.println(e.constraintViolations.toString())
+                    } catch (e: ValidationError) {
+                        System.err.println(e.toString())
                     }
                 }
             }

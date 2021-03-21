@@ -1,5 +1,7 @@
 package com.dotypos.lib.migration.dto.config
 
+import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration.Companion.REGEX_SALE_LOCATION
+import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration.Companion.REGEX_VAT_ID
 import com.dotypos.lib.migration.dto.entity.iface.Enablable
 import com.dotypos.lib.migration.dto.entity.iface.SellerRelated
 import kotlinx.serialization.SerialName

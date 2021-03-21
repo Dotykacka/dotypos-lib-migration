@@ -10,13 +10,16 @@ import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.dto.entity.iface.WithCountry
 import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.validation.hasUniqueItemIds
+import com.dotypos.lib.migration.dto.validation.validateRelationsTo
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.validator.validation.hasSize
+import com.dotypos.validator.validation.isLessThan
+import com.dotypos.validator.validation.isNotBlank
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.valiktor.functions.*
-import org.valiktor.validate
 import java.util.*
 
 @Serializable
@@ -115,61 +118,85 @@ data class PosMigrationDto(
 ) {
 
     init {
-        val sellerIds = sellers.map { it.id }.toSet()
-        val employeeIds = employees.map { it.id }.toSet()
-        val productIds = products.map { it.id }.toSet()
-        val productMap = products.map { it.id to it }.toMap()
+        validationOf(PosMigrationDto::employees)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = EmployeeMigrationDto::sellerId,
+                entities = PosMigrationDto::sellers,
+            )
 
+        validationOf(PosMigrationDto::sellers)
+            .hasUniqueItemIds()
 
-        validate(this) {
-            validate(PosMigrationDto::employees)
-                .hasUniqueItemIds()
-                .isValid { items ->
-                    items.all { it.sellerId == null || sellerIds.contains(it.sellerId) }
-                }
-            validate(PosMigrationDto::sellers)
-                .hasUniqueItemIds()
-                .isValid { items ->
-                    items.all { employeeIds.contains(it.employeeId) }
-                }
-            validate(PosMigrationDto::courses).hasUniqueItemIds()
-            validate(PosMigrationDto::categories).hasUniqueItemIds()
-            validate(PosMigrationDto::products)
-                .hasUniqueItemIds()
-                .isValid { items ->
-                    val categoryIds = categories.map { it.id }.toSet()
-                    items.all { categoryIds.contains(it.categoryId) }
-                }
-            validate(PosMigrationDto::ingredients)
-                .hasUniqueItemIds()
-                .isValid { items ->
-                    items.all { productIds.contains(it.parentProductId) && productIds.contains(it.ingredientProductId) }
-                }
-                .isValid { items ->
-                    // Same measurement unit group check
-                    items.all {
-                        val product = productMap[it.ingredientProductId] ?: return@isValid false
-                        product.measurementUnit.group == it.measurementUnit.group
-                    }
-                }
-            validate(PosMigrationDto::customerDiscountGroups)
-                .hasUniqueItemIds()
-            validate(PosMigrationDto::customers).hasUniqueItemIds()
-            validate(PosMigrationDto::tablePages).hasUniqueItemIds()
-            validate(PosMigrationDto::tables).hasUniqueItemIds()
-            validate(PosMigrationDto::warehouses).hasUniqueItemIds()
-            validate(PosMigrationDto::suppliers).hasUniqueItemIds()
-            validate(PosMigrationDto::printers)
-                .hasUniqueItemIds()
-                .isValid {
-                    // Uniqueness of print tasks
-                    val allTaskIds = it.flatMap { it.tasks.map { it.id } }
-                    allTaskIds.size == allTaskIds.toSet().size
-                }
-            validate(PosMigrationDto::stockOperations).hasUniqueItemIds()
-            // TODO: Validate all related entities for related entity existence
-            // TODO: Validate overlap of tables
-        }
+        validationOf(PosMigrationDto::courses)
+            .hasUniqueItemIds()
+
+        validationOf(PosMigrationDto::categories)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = CategoryMigrationDto::defaultCourseId,
+                entities = PosMigrationDto::courses,
+            )
+
+        validationOf(PosMigrationDto::products)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = ProductMigrationDto::categoryId,
+                entities = PosMigrationDto::categories,
+            )
+
+        validationOf(PosMigrationDto::ingredients)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = ProductIngredientMigrationDto::parentProductId,
+                entities = PosMigrationDto::products,
+            )
+            .validateRelationsTo(
+                key = ProductIngredientMigrationDto::ingredientProductId,
+                entities = PosMigrationDto::products
+            )
+        // TODO: measurement unit group validation
+
+        validationOf(PosMigrationDto::customerDiscountGroups)
+            .hasUniqueItemIds()
+
+        validationOf(PosMigrationDto::customers)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = CustomerMigrationDto::discountGroupId,
+                entities = PosMigrationDto::customerDiscountGroups,
+            )
+
+        validationOf(PosMigrationDto::tablePages)
+            .hasUniqueItemIds()
+
+        validationOf(PosMigrationDto::tables)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = TableMigrationDto::tablePageId,
+                entities = PosMigrationDto::tablePages,
+            )
+
+        validationOf(PosMigrationDto::warehouses)
+            .hasUniqueItemIds()
+
+        validationOf(PosMigrationDto::suppliers)
+            .hasUniqueItemIds()
+
+        validationOf(PosMigrationDto::printers)
+            .hasUniqueItemIds()
+        // TODO: PrintTask uniqueness
+
+        validationOf(PosMigrationDto::stockOperations)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = StockOperationMigrationDto::productId,
+                entities = PosMigrationDto::products,
+            )
+            .validateRelationsTo(
+                key = StockOperationMigrationDto::warehouseId,
+                entities = PosMigrationDto::warehouses
+            )
     }
 
     @Serializable
@@ -223,12 +250,9 @@ data class PosMigrationDto(
         val pos: PosMetadata,
     ) {
         init {
-            validate(this) {
-                validate(Metadata::migrationId).hasSize(min = 10)
-                validate(Metadata::created).isLessThan(Date())
-            }
+            validationOf(Metadata::migrationId).hasSize(min = 10)
+            validationOf(Metadata::created).isLessThan(Date())
         }
-
     }
 
     @Serializable
@@ -241,9 +265,7 @@ data class PosMigrationDto(
         val id: String
     ) {
         init {
-            validate(this) {
-                validate(PosMetadata::id).isNotBlank()
-            }
+            validationOf(PosMetadata::id).isNotBlank()
         }
     }
 
