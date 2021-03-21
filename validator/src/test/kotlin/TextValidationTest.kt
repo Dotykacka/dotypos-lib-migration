@@ -67,11 +67,34 @@ class TextValidationTest {
     inner class FormattedText {
 
         @Test
-        fun `Validate color`() {
+        fun `Validate RGB color with hash`() {
             // Valid
             assertDoesNotThrow {
-                WrapperObject(text = "FFAABB22").validationOf(WrapperObject::text).isValidColor()
-                WrapperObject(text = "AABB22").validationOf(WrapperObject::text).isValidColor()
+                WrapperObject(text = "#AABB22").validationOf(WrapperObject::text).isValidColor()
+            }
+        }
+
+        @Test
+        fun `Validate ARGB color with hash`() {
+            // Valid
+            assertDoesNotThrow {
+                WrapperObject(text = "#FFAABB22").validationOf(WrapperObject::text).isValidColor()
+            }
+        }
+
+        @Test
+        fun `Validate RGB color without hash`() {
+            // Valid
+            assertDoesNotThrow {
+                WrapperObject(text = "AABB22").validationOf(WrapperObject::text).isValidColor(requireLeadingHash = false)
+            }
+        }
+
+        @Test
+        fun `Validate ARGB color without hash`() {
+            // Valid
+            assertDoesNotThrow {
+                WrapperObject(text = "FFAABB22").validationOf(WrapperObject::text).isValidColor(requireLeadingHash = false)
             }
         }
 
@@ -79,7 +102,7 @@ class TextValidationTest {
         fun `Validate wrong color`() {
             // Invalid
             assertThrows<ValidationError> {
-                WrapperObject(text = "HHAABB66").validationOf(WrapperObject::text).isValidColor()
+                WrapperObject(text = "#HHAABB66").validationOf(WrapperObject::text).isValidColor()
             }
         }
 
