@@ -1,10 +1,12 @@
 import com.dotypos.validator.ErrorCollector
+import com.dotypos.validator.ValidationError
 import com.dotypos.validator.validation.isGreaterThan
 import com.dotypos.validator.validation.isNotBlank
 import com.dotypos.validator.validationOf
 import com.dotypos.validator.withSafeValidation
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -49,6 +51,17 @@ class ErrorCollectorTest {
             )
         }
         assertTrue { result is ErrorCollector.ValidationResult.Success }
+    }
+
+    @Test
+    fun `Multiple validation errors without collector`() {
+        assertThrows<ValidationError> {
+            ComplexEntity(
+                id = 1,
+                text = "",
+                otherText = null,
+            )
+        }
     }
 
     private data class ComplexEntity(
