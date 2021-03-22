@@ -8,7 +8,6 @@ import com.dotypos.lib.migration.dto.enumerate.PrintTaskType
 import com.dotypos.lib.migration.dto.validation.validateId
 import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.validator.validation.isGreaterThanOrEqualTo
-import com.dotypos.validator.validation.isValidBase64OrNull
 import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -72,7 +71,7 @@ data class PrintTaskMigrationDto(
 
     init {
         validateId()
-        validationOf(PrintTaskMigrationDto::logo).isValidBase64OrNull()
+        //validationOf(PrintTaskMigrationDto::logo).isValidBase64OrNull() Temporarily skip validation
         validationOf(PrintTaskMigrationDto::copies).isGreaterThanOrEqualTo(0)
         validateVersion()
     }
