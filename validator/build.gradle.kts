@@ -4,10 +4,11 @@ val kotlinVersion: String by rootProject.extra
 
 plugins {
     kotlin("jvm")
+    id("maven-publish")
 }
 
 group = "com.dotypos.lib.migration"
-version = "0.3.6"
+version = "0.4.1"
 
 dependencies {
     implementation(kotlin("reflect"))
@@ -18,10 +19,59 @@ dependencies {
     implementation(kotlin("script-runtime"))
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version
+            )
+        )
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+
+publishing {
+    publications {
+        register<MavenPublication>("gpr") {
+            groupId = "com.dotypos.lib.migration"
+            artifactId = "validation"
+            from(components["java"])
+            version = project.version.toString()
+
+            pom {
+                name.set("Dotypos Data Validation Library")
+                developers {
+                    developer {
+                        id.set("tomas.sustek")
+                        name.set("Tomáš Šůstek")
+                        email.set("tomas.sustek@dotykacka.cz")
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Dotykacka/dotypos-lib-migration")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GHP_USER")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GHP_TOKEN")
+            }
+        }
+    }
 }

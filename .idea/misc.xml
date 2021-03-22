@@ -5,18 +5,4 @@
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
-  <component name="accountSettings">
-    <option name="activeProfile" value="profile:default" />
-    <option name="activeRegion" value="eu-west-2" />
-    <option name="recentlyUsedProfiles">
-      <list>
-        <option value="profile:default" />
-      </list>
-    </option>
-    <option name="recentlyUsedRegions">
-      <list>
-        <option value="eu-west-2" />
-      </list>
-    </option>
-  </component>
 </project>
