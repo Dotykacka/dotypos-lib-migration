@@ -1,6 +1,7 @@
 package com.dotypos.lib.migration.demo.creator
 
 import com.dotypos.lib.migration.demo.utils.IndefiniteList
+import com.dotypos.lib.migration.demo.utils.MaterialColors
 import com.dotypos.lib.migration.util.KeystoreUtil
 import java.io.File
 import java.math.BigDecimal
@@ -15,7 +16,7 @@ val logos by lazy(::loadLogos)
 val eetKeystores by lazy(::loadKeyStores)
 
 val vatRates = listOf("10", "15", "21").map(::BigDecimal).asIndefinite()
-fun getColor(random: Random) = "#AABBCC"
+fun getColor(random: Random) = MaterialColors.allPalettes.random(random).all.random(random)
 
 private fun getNames(name: String): Lazy<List<String>> = lazy {
     loadTextResource("/names/$name.txt")
