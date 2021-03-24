@@ -1,14 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotlinVersion: String by rootProject.extra
+val projectGroup: String by rootProject.extra
+val projectVersion: String by rootProject.extra
+
+group = projectGroup
+version = projectVersion
 
 plugins {
     kotlin("jvm")
     id("maven-publish")
 }
-
-group = "com.dotypos.lib.migration"
-version = "0.4.1"
 
 dependencies {
     implementation(kotlin("reflect"))

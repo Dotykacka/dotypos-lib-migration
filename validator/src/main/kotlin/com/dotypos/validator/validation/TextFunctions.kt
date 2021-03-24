@@ -32,7 +32,7 @@ fun <T> PropertyValidationContext<T, String>.isValidBase64() =
 
 fun <T> PropertyValidationContext<T, String?>.isValidBase64OrNull() =
     isValid(Base64Text) {
-        value == null || kotlin.runCatching { Base64.getDecoder().decode(value) }.isSuccess
+        value == null || kotlin.runCatching { Regex("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$") }.isSuccess
     }
 
 fun <T> PropertyValidationContext<T, out CharSequence>.hasSize(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE) =
