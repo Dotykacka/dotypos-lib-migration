@@ -9,9 +9,9 @@ import java.util.*
 fun <T> PropertyValidationContext<T, String>.isValidColor(requireLeadingHash: Boolean = true) =
     isValid(HexColor(requireLeadingHash)) {
         if (requireLeadingHash) {
-            it.matches(Regex("^#[0-9A-F]{6,8}$"))
+            it.matches(Regex("^#([0-9A-F]{6,8}|[0-9a-f]{6,8})$"))
         } else {
-            it.matches(Regex("^[0-9A-F]{6,8}$"))
+            it.matches(Regex("^([0-9A-F]{6,8}|[0-9a-f]{6,8})$"))
         }
     }
 
