@@ -36,6 +36,12 @@ data class LicenseMarkeetaMigrationDto (
     val originalLicenseType: String,
 
     /**
+     * Date of license activation.
+     */
+    @SerialName("activationDate")
+    val activationDate: Date,
+
+    /**
      * Invoiced until.
      */
     @SerialName("invoicedUntil")
