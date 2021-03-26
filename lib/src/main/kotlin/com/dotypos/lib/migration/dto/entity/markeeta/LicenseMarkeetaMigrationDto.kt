@@ -80,6 +80,12 @@ data class LicenseMarkeetaMigrationDto (
     @SerialName("commissionPartner")
     val commissionPartner: CommissionPartner?,
 
+    /**
+     * Wholesale Customer.
+     */
+    @SerialName("wholesaleCustomer")
+    val wholesaleCustomer: String?,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithCurrency {

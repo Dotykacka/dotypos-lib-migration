@@ -80,6 +80,12 @@ data class DocumentMarkeetaMigrationDto (
     @SerialName("paymentSchedule")
     val paymentSchedule: PaymentSchedule?,
 
+    /**
+     * Some documents can relate to Markeeta terminal ID or multiple Markeeta terminal IDs.
+     */
+    @SerialName("terminalIdsMarkeeta")
+    val terminalIdsMarkeeta: List<Long>?,
+
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
 ) : BaseEntityDto(), WithName {
