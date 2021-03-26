@@ -81,10 +81,10 @@ data class LicenseMarkeetaMigrationDto (
     val commissionPartner: CommissionPartner?,
 
     /**
-     * Wholesale Customer.
+     * Wholesale Customer Name.
      */
-    @SerialName("wholesaleCustomer")
-    val wholesaleCustomer: String?,
+    @SerialName("wholesaleCustomerName")
+    val wholesaleCustomerName: String?,
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
