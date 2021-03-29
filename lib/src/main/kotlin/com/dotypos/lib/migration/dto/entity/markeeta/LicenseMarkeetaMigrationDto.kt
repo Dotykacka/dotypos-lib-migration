@@ -36,6 +36,12 @@ data class LicenseMarkeetaMigrationDto (
     val originalLicenseType: String,
 
     /**
+     * Date of license activation.
+     */
+    @SerialName("activationDate")
+    val activationDate: Date,
+
+    /**
      * Invoiced until.
      */
     @SerialName("invoicedUntil")
@@ -79,6 +85,12 @@ data class LicenseMarkeetaMigrationDto (
      */
     @SerialName("commissionPartner")
     val commissionPartner: CommissionPartner?,
+
+    /**
+     * Wholesale Customer Name.
+     */
+    @SerialName("wholesaleCustomerName")
+    val wholesaleCustomerName: String?,
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
