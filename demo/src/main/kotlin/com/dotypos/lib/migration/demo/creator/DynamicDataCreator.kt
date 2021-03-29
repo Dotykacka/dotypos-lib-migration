@@ -397,8 +397,17 @@ class DynamicDataCreator(
             } else {
                 EmployeePosPermission.values().filter { random.nextBoolean() }.toSet()
             },
-            stockPermissions = EmployeeStockPermission.values().filter { random.nextBoolean() }.toSet(),
-            mobileWaiterPermissions = EmployeeMobileWaiterPermission.values().filter { random.nextBoolean() }.toSet(),
+            stockPermissions = if (id == 0L) {
+                EmployeeStockPermission.values().toSet()
+            } else {
+                EmployeeStockPermission.values().filter { random.nextBoolean() }.toSet()
+            },
+            mobileWaiterPermissions =
+            if (id == 0L) {
+                EmployeeMobileWaiterPermission.values().toSet()
+            } else {
+                EmployeeMobileWaiterPermission.values().filter { random.nextBoolean() }.toSet()
+            },
             isEnabled = if (id == 0L) true else random.valueOrDefault(5, true) { false },
             isDeleted = if (id == 0L) false else random.valueOrDefault(20, false) { true },
             version = System.currentTimeMillis(),
