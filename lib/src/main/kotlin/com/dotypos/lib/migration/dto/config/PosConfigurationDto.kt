@@ -115,6 +115,12 @@ data class PosConfigurationDto(
     val czFiscalizationConfigurations: List<CzFiscalizationConfiguration>,
 
     /**
+     * Configuration of display features
+     */
+    @SerialName("display")
+    val display: DisplayConfiguration = DisplayConfiguration(),
+
+    /**
      * Configuration of cash drawer behavior
      */
     @SerialName("cashDrawer")
