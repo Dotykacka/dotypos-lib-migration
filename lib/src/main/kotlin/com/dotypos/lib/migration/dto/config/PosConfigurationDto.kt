@@ -115,6 +115,12 @@ data class PosConfigurationDto(
     val czFiscalizationConfigurations: List<CzFiscalizationConfiguration>,
 
     /**
+     * Configuration of cash drawer behavior
+     */
+    @SerialName("cashDrawer")
+    val cashDrawer: CashDrawerConfiguration = CashDrawerConfiguration(),
+
+    /**
      * ID of default [warehouse][WarehouseMigrationDto]
      */
     @SerialName("defaultWarehouseId")
