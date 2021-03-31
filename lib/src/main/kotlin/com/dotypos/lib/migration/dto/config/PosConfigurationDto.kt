@@ -97,6 +97,12 @@ data class PosConfigurationDto(
     val documentNumbering: DocumentNumberingConfiguration,
 
     /**
+     * Prefix which will be printed before order number. It is used to distinguish orders.
+     */
+    @SerialName("orderNumberPrefix")
+    val orderNumberPrefix: String = "",
+
+    /**
      * List of FiscalizationConfigurations (each for every seller)
      */
     @SerialName("czFiscalizationConfigurations")
