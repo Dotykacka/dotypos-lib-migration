@@ -3,8 +3,7 @@ package com.dotypos.lib.migration.demo.creator
 import com.dotypos.lib.migration.demo.Configuration
 import com.dotypos.lib.migration.dto.CloudMigrationDto
 import com.dotypos.lib.migration.dto.PosMigrationDto
-import com.dotypos.lib.migration.dto.config.CzFiscalizationConfiguration
-import com.dotypos.lib.migration.dto.config.PosConfigurationDto
+import com.dotypos.lib.migration.dto.config.*
 import com.dotypos.lib.migration.dto.entity.*
 import com.dotypos.lib.migration.dto.enumerate.*
 import com.dotypos.lib.migration.dto.enumerate.permission.EmployeeMobileWaiterPermission
@@ -90,6 +89,14 @@ class DynamicDataCreator(
                 ),
             ),
             posConfiguration = baseData.posConfiguration.copy(
+                currency = "PLN",
+                alternativeCurrency = AlternativeCurrencyConfiguration(
+                    currency = "CZK",
+                    returnInPrimary = false,
+                    roundingDecimals = 1,
+                    exchangeRateAmount = BigDecimal.ONE,
+                    exchangeRate = BigDecimal("3")
+                ),
                 czFiscalizationConfigurations = czFiscalizationConfigurations,
                 documentNumbering = PosConfigurationDto.DocumentNumberingConfiguration(
                     receiptFormat = "%Y%m@6",
@@ -99,7 +106,19 @@ class DynamicDataCreator(
                     cancellationInvoiceFormat = "CI%Y%m@6",
                     cancellationInvoiceLastNumber = "CI202103000123",
                 ),
-                orderNumberPrefix = faker.food.dish().substring(0, random.nextInt(1..4))
+                orderNumberPrefix = faker.food.dish().substring(0, random.nextInt(1..4)),
+                prefillValuesOnRegisterOpen = true,
+                reportingEmails = setOf("example@example.com", "test@example.com"),
+                display = DisplayConfiguration(
+                    defaultScreen = DisplayConfiguration.DefaultScreen.TABLE_MAP,
+                    saleScreen = DisplayConfiguration.SaleScreenConfiguration(
+                        includeHiddenProductsInSearch = true,
+                        displayPluButton = true,
+                    ),
+                ),
+                cashDrawer = CashDrawerConfiguration(
+                    showManualButton = true,
+                ),
             ),
             employees = employeesList.toSet(),
             sellers = emptySet(),
