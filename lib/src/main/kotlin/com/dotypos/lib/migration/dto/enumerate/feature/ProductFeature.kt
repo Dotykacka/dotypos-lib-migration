@@ -25,8 +25,7 @@ enum class ProductFeature {
     WITH_TIME_MEASUREMENT,
 
     /**
-     * All ingredients of product will be added with product to order. )
-     * No stock deducting of item will be performed during the order issue.
+     * If the product is used as an ingredient, it will be added to the order instead of being deducted.
      */
     @SerialName("jointSale")
     JOINT_SALE,
