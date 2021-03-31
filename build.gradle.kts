@@ -5,7 +5,7 @@ plugins {
 
 val kotlinVersion: String by extra("1.4.21")
 val projectGroup: String by extra("com.dotypos.lib.migration")
-val projectVersion: String by extra("0.4.4")
+val projectVersion: String by extra("0.4.5")
 
 allprojects {
     repositories {
