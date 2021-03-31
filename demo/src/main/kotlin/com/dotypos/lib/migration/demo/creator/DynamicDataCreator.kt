@@ -22,6 +22,7 @@ import java.math.RoundingMode
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class DynamicDataCreator(
     private val config: Configuration,
@@ -97,7 +98,8 @@ class DynamicDataCreator(
                     invoiceLastNumber = "I202103000123",
                     cancellationInvoiceFormat = "CI%Y%m@6",
                     cancellationInvoiceLastNumber = "CI202103000123",
-                )
+                ),
+                orderNumberPrefix = faker.food.dish().substring(0, random.nextInt(1..4))
             ),
             employees = employeesList.toSet(),
             sellers = emptySet(),
