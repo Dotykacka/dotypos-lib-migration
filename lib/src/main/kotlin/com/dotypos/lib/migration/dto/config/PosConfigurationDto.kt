@@ -109,6 +109,19 @@ data class PosConfigurationDto(
     val orderNumberPrefix: String = "",
 
     /**
+     * Prefill values from previous register closure to new register opening.
+     */
+    @SerialName("prefillValueOnRegisterOpen")
+    val prefillValuesOnRegisterOpen: Boolean = false,
+
+    /**
+     * Email addresses to be used for automated reporting (register closure).
+     * null = don't send reports
+     */
+    @SerialName("reportingEmails")
+    val reportingEmails: Set<String>? = null,
+
+    /**
      * List of FiscalizationConfigurations (each for every seller)
      */
     @SerialName("czFiscalizationConfigurations")
