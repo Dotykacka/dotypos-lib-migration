@@ -36,6 +36,12 @@ data class PosConfigurationDto(
     val currency: String,
 
     /**
+     * Alternaive currency configuration, null = disable alternative currency
+     */
+    @SerialName("alternativeCurrency")
+    val alternativeCurrency: AlternativeCurrencyConfiguration? = null,
+
+    /**
      * Configuration of rounding behavior
      */
     @SerialName("rounding")
