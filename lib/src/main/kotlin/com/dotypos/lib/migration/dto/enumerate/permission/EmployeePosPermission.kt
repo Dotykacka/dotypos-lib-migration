@@ -104,7 +104,7 @@ enum class EmployeePosPermission {
     /**
      * Enables to give discounts on the open order / item of the open order.
      */
-    @SerialName("controlReceiptPrint")
+    @SerialName("discountOffer")
     DISCOUNT_OFFER,
 
     /**
