@@ -101,7 +101,7 @@ data class PosMigrationDto(
     /**
      * List of suppliers
      */
-    @SerialName("supplliers")
+    @SerialName("suppliers")
     val suppliers: List<SupplierMigrationDto>,
 
     /**
