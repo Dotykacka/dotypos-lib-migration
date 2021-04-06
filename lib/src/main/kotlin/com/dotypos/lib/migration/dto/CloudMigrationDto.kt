@@ -60,13 +60,20 @@ data class CloudMigrationDto(
             )
         }
 
+        validationOf(CloudMigrationDto::stockOperations) {
+            hasUniqueItemIds()
+            validateRelationsTo(
+                key = StockOperationMigrationDto::documentId,
+                entities = CloudMigrationDto::documents,
+            )
+            validateRelationsTo(
+                key = StockOperationMigrationDto::stockTransactionId,
+                entities = CloudMigrationDto::stockTransactions
+            )
+        }
+
         validationOf(CloudMigrationDto::stockTransactions) {
             hasUniqueItemIds()
         }
-
-        validationOf(CloudMigrationDto::stockOperations) {
-            hasUniqueItemIds()
-        }
-
     }
 }
