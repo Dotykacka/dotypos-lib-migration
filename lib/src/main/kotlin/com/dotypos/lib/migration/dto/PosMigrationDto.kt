@@ -194,8 +194,16 @@ data class PosMigrationDto(
                 entities = PosMigrationDto::products,
             )
             .validateRelationsTo(
+                key = StockOperationMigrationDto::employeeId,
+                entities = PosMigrationDto::employees,
+            )
+            .validateRelationsTo(
+                key = StockOperationMigrationDto::sellerId,
+                entities = PosMigrationDto::sellers,
+            )
+            .validateRelationsTo(
                 key = StockOperationMigrationDto::warehouseId,
-                entities = PosMigrationDto::warehouses
+                entities = PosMigrationDto::warehouses,
             )
     }
 
