@@ -235,7 +235,7 @@ class DynamicDataCreator(
                         stockQuantityStatus[ingredientMigrationDto.ingredientProductId] = status
 
                         StockOperationMigrationDto(
-                            id = itemId * 1000L + index,
+                            id = 100_000_000L + itemId * 10_000L + index,
                             stockTransactionId = null,
                             productId = ingredientMigrationDto.ingredientProductId,
                             warehouseId = warehouseList.first().id,
