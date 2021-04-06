@@ -6,7 +6,7 @@ import com.dotypos.validator.context.PropertyValidationContext
 import kotlin.reflect.KProperty
 
 fun <T, P> T.validationOf(property: KProperty<P>, action: PropertyValidationContext<T, P>.() -> Unit = {}) =
-    PropertyValidationContext(this, property)
+    PropertyValidationContext(this, property).also(action)
 
 fun <T, P1, P2> T.validationOf(
     property1: KProperty<P1>, property2: KProperty<P2>,

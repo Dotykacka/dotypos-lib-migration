@@ -4,6 +4,10 @@ import com.dotypos.lib.migration.dto.entity.DocumentMigrationDto
 import com.dotypos.lib.migration.dto.entity.MoneyOperationMigrationDto
 import com.dotypos.lib.migration.dto.entity.StockOperationMigrationDto
 import com.dotypos.lib.migration.dto.entity.StockTransactionMigrationDto
+import com.dotypos.lib.migration.dto.validation.hasUniqueItemIds
+import com.dotypos.lib.migration.dto.validation.validateRelationsTo
+import com.dotypos.validator.validation.isNotBlank
+import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -38,4 +42,31 @@ data class CloudMigrationDto(
      */
     @SerialName("stockOperations")
     val stockOperations: List<StockOperationMigrationDto>,
-)
+) {
+    init {
+        validationOf(CloudMigrationDto::migrationResultData) {
+            isNotBlank()
+        }
+
+        validationOf(CloudMigrationDto::documents) {
+            hasUniqueItemIds()
+        }
+
+        validationOf(CloudMigrationDto::moneyOperations) {
+            hasUniqueItemIds()
+            validateRelationsTo(
+                key = MoneyOperationMigrationDto::documentId,
+                entities = CloudMigrationDto::documents,
+            )
+        }
+
+        validationOf(CloudMigrationDto::stockTransactions) {
+            hasUniqueItemIds()
+        }
+
+        validationOf(CloudMigrationDto::stockOperations) {
+            hasUniqueItemIds()
+        }
+
+    }
+}

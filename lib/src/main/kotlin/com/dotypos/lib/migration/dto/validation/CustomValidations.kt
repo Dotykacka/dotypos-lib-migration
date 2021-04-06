@@ -6,6 +6,7 @@ import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.validator.context.PropertyValidationContext
 import com.dotypos.validator.validation.*
 import com.dotypos.validator.validationOf
+import java.math.BigDecimal
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
@@ -19,7 +20,10 @@ fun PropertyValidationContext<*, Long?>.isValidIdOrNull() =
 fun <T : BaseEntityDto> PropertyValidationContext<*, out Collection<T>>.hasUniqueItemIds() =
     this.hasUnique(BaseEntityDto::id)
 
-fun <T : BaseEntityDto, P : BaseEntityDto> PropertyValidationContext<*, out Iterable<T>>.validateRelationsTo(
+/**
+ * Validates relation of items
+ */
+fun <T : Any, P : BaseEntityDto> PropertyValidationContext<*, out Iterable<T>>.validateRelationsTo(
     entitiesParent: Any? = parent,
     key: KProperty<Long?>,
     entities: KProperty<Iterable<P>>
@@ -50,6 +54,28 @@ fun <T : BaseEntityDto, P : BaseEntityDto> PropertyValidationContext<*, out Iter
         values = missing.map { it.second },
         keys = missing.map { it.first },
     )
+}
+
+fun <T : Any> PropertyValidationContext<*, out Iterable<T>>.expectSum(
+    sumValueParent: Any? = parent,
+    key: KProperty<BigDecimal>,
+    sumValue: KProperty<BigDecimal>,
+) = customValidation {
+    val keyGetter = key.getter.also { it.isAccessible }
+    val expectedValue = sumValue.getter.also { it.isAccessible }.call(sumValueParent)
+    val sum = value.sumOf { keyGetter.call(it) }
+    if (sum.compareTo(expectedValue) != 0) {
+        throw UnexpectedSumValue(
+            propertyParent = parent,
+            itemsPropertyName = property.name,
+            keyName = key.name,
+            sumPropertyParent = sumValueParent,
+            sumPropertyName = sumValue.name,
+            values = value,
+            calculated = sum,
+            expected = expectedValue,
+        )
+    }
 }
 
 fun <T : WithId> T.validateId() = validationOf(WithId::id).isValidId()

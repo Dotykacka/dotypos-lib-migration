@@ -67,7 +67,6 @@ data class MoneyOperationMigrationDto(
     @SerialName(WithCurrency.SERIALIZED_NAME)
     override val currency: String,
 
-
     /**
      * Rounded displayable exchange rate
      * 250 CZK (primary) ~ 10 USD -> 0.04

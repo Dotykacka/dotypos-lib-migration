@@ -7,14 +7,10 @@ package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.CzFiscalizationConstraints
 import com.dotypos.lib.migration.dto.entity.iface.*
-import com.dotypos.lib.migration.dto.validation.isValidIdOrNull
-import com.dotypos.lib.migration.dto.validation.validateId
-import com.dotypos.lib.migration.dto.validation.validateSellerId
-import com.dotypos.lib.migration.dto.validation.validateVersion
+import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
-import com.dotypos.validator.validation.matches
-import com.dotypos.validator.validation.matchesOrNull
+import com.dotypos.validator.validation.*
 import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -103,6 +99,7 @@ data class DocumentMigrationDto(
     @SerialName("totalValue")
     val totalValue: BigDecimal,
 
+    @SerialName(WithCurrency.SERIALIZED_NAME)
     override val currency: String,
 
     /**
@@ -193,28 +190,70 @@ data class DocumentMigrationDto(
 
     init {
         validateId()
-        validationOf(DocumentMigrationDto::relatedDocumentId).isValidIdOrNull()
-        validationOf(DocumentMigrationDto::tableId).isValidIdOrNull()
-        validationOf(DocumentMigrationDto::customerId).isValidIdOrNull()
-        validationOf(DocumentMigrationDto::employeeId).isValidIdOrNull()
+
+        validationOf(DocumentMigrationDto::relatedDocumentId) {
+            isValidIdOrNull()
+        }
+
+        validationOf(DocumentMigrationDto::tableId) {
+            isValidIdOrNull()
+        }
+
+        validationOf(DocumentMigrationDto::customerId) {
+            isValidIdOrNull()
+        }
+
+        validationOf(DocumentMigrationDto::employeeId) {
+            isValidIdOrNull()
+        }
+
+        validationOf(DocumentMigrationDto::note) {
+            hasSize(max = 1000)
+        }
+
+        validationOf(DocumentMigrationDto::items) {
+            expectSum(
+                key = DocumentItemMigrationDto::totalPriceWithVat,
+                sumValue = DocumentMigrationDto::totalValue,
+            )
+        }
+
+        validateCurrency()
+
         validateSellerId()
+
         validateVersion()
     }
 
+    /**
+     * Type of document
+     */
     @Serializable
     enum class Type(
         val isInvoice: Boolean,
         val isCancellation: Boolean
     ) {
+        /**
+         * Receipt
+         */
         @SerialName("receipt")
         RECEIPT(isInvoice = false, isCancellation = false),
 
+        /**
+         * Cancellation of receipt
+         */
         @SerialName("receiptCancellation")
         RECEIPT_CANCELLATION(isInvoice = false, isCancellation = true),
 
+        /**
+         * Invoice
+         */
         @SerialName("invoice")
         INVOICE(isInvoice = true, isCancellation = false),
 
+        /**
+         * Cancellation of invoice
+         */
         @SerialName("invoiceCancellation")
         INVOICE_CANCELLATION(isInvoice = true, isCancellation = false)
     }
@@ -247,7 +286,18 @@ data class DocumentMigrationDto(
          */
         @SerialName("accuracy")
         val accuracy: Float
-    )
+    ) {
+        init {
+            validationOf(Location::latitude)
+                .isBetween(start = -90.0, end = 90.0)
+
+            validationOf(Location::longitude)
+                .isBetween(start = -180.0, end = 180.0)
+
+            validationOf(Location::accuracy)
+                .isGreaterThanOrEqualTo(value = 0.0f)
+        }
+    }
 
     @Serializable
     data class ForeignCurrency(
@@ -305,10 +355,17 @@ data class DocumentMigrationDto(
         val bkp: String?,
     ) {
         init {
-            validationOf(CzFiscalizationData::businessPremissesId).matches(CzFiscalizationConstraints.BUSINESS_PREMISES_ID_FORMAT)
-            validationOf(CzFiscalizationData::cashRegisterId).matches(CzFiscalizationConstraints.CASH_REGISTER_ID_FORMAT)
-            validationOf(CzFiscalizationData::fik).matchesOrNull(CzFiscalizationConstraints.FIK_FORMAT)
-            validationOf(CzFiscalizationData::bkp).matchesOrNull(CzFiscalizationConstraints.BKP_FORMAT)
+            validationOf(CzFiscalizationData::businessPremissesId)
+                .matches(CzFiscalizationConstraints.BUSINESS_PREMISES_ID_FORMAT)
+
+            validationOf(CzFiscalizationData::cashRegisterId)
+                .matches(CzFiscalizationConstraints.CASH_REGISTER_ID_FORMAT)
+
+            validationOf(CzFiscalizationData::fik)
+                .matchesOrNull(CzFiscalizationConstraints.FIK_FORMAT)
+
+            validationOf(CzFiscalizationData::bkp)
+                .matchesOrNull(CzFiscalizationConstraints.BKP_FORMAT)
         }
 
         /**
