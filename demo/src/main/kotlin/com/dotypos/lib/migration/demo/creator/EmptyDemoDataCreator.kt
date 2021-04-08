@@ -63,7 +63,7 @@ object EmptyDemoDataCreator : PosDataCreator, CloudDataCreator {
     )
 
     override fun createCloudData() = CloudMigrationDto(
-        migrationResultData = "cloudId-branchId-metadata",
+        migrationResultData = "1|0|0",
         documents = emptyList(),
         moneyOperations = emptyList(),
         stockTransactions = emptyList(),

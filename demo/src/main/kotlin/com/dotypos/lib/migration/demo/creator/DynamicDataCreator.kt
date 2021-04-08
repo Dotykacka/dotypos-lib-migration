@@ -375,7 +375,7 @@ class DynamicDataCreator(
         }
 
         return baseData.copy(
-            migrationResultData = "1|$config.cloudId|$config.branchId",
+            migrationResultData = "1|${config.cloudId}|${config.branchId}",
             documents = documentList,
             moneyOperations = moneyOperations,
             stockTransactions = stockTransactions,
