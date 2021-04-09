@@ -6,6 +6,7 @@
 package com.dotypos.lib.migration.dto.entity
 
 import com.dotypos.lib.migration.dto.CzFiscalizationConstraints
+import com.dotypos.lib.migration.dto.entity.DocumentMigrationDto.CancellationType
 import com.dotypos.lib.migration.dto.entity.iface.*
 import com.dotypos.lib.migration.dto.validation.*
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
@@ -31,6 +32,13 @@ data class DocumentMigrationDto(
      */
     @SerialName("type")
     val type: Type,
+
+    /**
+     * Type of cancellation of document
+     * [CancellationType.NONE] if document is not cancelled
+     */
+    @SerialName("cancellationType")
+    val cancellationType: CancellationType = CancellationType.NONE,
 
     /**
      * ID of related document, required for cancellation documents
@@ -256,6 +264,27 @@ data class DocumentMigrationDto(
          */
         @SerialName("invoiceCancellation")
         INVOICE_CANCELLATION(isInvoice = true, isCancellation = false)
+    }
+
+    @Serializable
+    enum class CancellationType {
+        /**
+         * Document is not cancelled
+         */
+        @SerialName("none")
+        NONE,
+
+        /**
+         * Part of document is cancelled by one or more cancellation documents
+         */
+        @SerialName("part")
+        PART,
+
+        /**
+         * Document is fully cancelled by one ore more cancellation documents
+         */
+        @SerialName("full")
+        FULL,
     }
 
     /**
