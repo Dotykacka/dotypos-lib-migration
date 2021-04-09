@@ -11,7 +11,7 @@ fun <T, P> T.validationOf(property: KProperty<P>, action: PropertyValidationCont
 fun <T, P1, P2> T.validationOf(
     property1: KProperty<P1>, property2: KProperty<P2>,
     action: DualPropertyValidationContext<T, P1, P2>.() -> Unit = {}
-) = DualPropertyValidationContext(this, property1, property2)
+) = DualPropertyValidationContext(this, property1, property2).also(action)
 
 fun <T, P> PropertyValidationContext<T, P>.isValid(
     constraint: ValidationConstraint,
