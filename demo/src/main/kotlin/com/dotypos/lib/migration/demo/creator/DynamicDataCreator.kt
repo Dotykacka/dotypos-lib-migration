@@ -23,6 +23,10 @@ import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+/**
+ * Configurable dynamic data creator
+ * WIP
+ */
 class DynamicDataCreator(
     private val config: Configuration,
     private val seed: Long,
@@ -329,6 +333,7 @@ class DynamicDataCreator(
             documentList += DocumentMigrationDto(
                 documentId,
                 type = DocumentMigrationDto.Type.RECEIPT,
+                cancellationType = DocumentMigrationDto.CancellationType.NONE,
                 relatedDocumentId = null,
                 tableId = random.valueOrNull(2) { tableList.randomOrNull()?.id },
                 created = Date(created),
