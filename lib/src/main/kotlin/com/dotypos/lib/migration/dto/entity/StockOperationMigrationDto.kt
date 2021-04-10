@@ -78,7 +78,7 @@ data class StockOperationMigrationDto(
 
     /**
      * New recalculated purchase price for product/warehouse.
-     * Should be presented on [Type.PURCHASE],[Type.CORRECTION],[Type.TRANSFER] in case that,
+     * Should be presented on [Type.STOCK_TAKING], [Type.PURCHASE],[Type.CORRECTION],[Type.TRANSFER] in case that,
      * purchasePrice was already tracked in the past.
      */
     @SerialName("avgPurchasePrice")
