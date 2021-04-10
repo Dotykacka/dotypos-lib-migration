@@ -263,7 +263,13 @@ data class DocumentMigrationDto(
          * Cancellation of invoice
          */
         @SerialName("invoiceCancellation")
-        INVOICE_CANCELLATION(isInvoice = true, isCancellation = false)
+        INVOICE_CANCELLATION(isInvoice = true, isCancellation = false),
+
+        /**
+         * Write-Off of damaged or expired goods.
+         */
+        @SerialName("writeOff")
+        WRITE_OFF(isInvoice = false, isCancellation = false),
     }
 
     @Serializable

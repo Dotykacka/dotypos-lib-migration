@@ -126,6 +126,9 @@ data class MoneyOperationMigrationDto(
 
         @SerialName("cashOut")
         CASH_OUT,
+
+        @SerialName("writeOff")
+        WRITE_OFF,
     }
 
     @Serializable
