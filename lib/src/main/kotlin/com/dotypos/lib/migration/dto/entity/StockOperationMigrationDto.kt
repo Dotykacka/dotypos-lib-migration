@@ -161,5 +161,11 @@ data class StockOperationMigrationDto(
          */
         @SerialName("stockTaking")
         STOCK_TAKING,
+
+        /**
+         * Return of stuff
+         */
+        @SerialName("return")
+        RETURN,
     }
 }

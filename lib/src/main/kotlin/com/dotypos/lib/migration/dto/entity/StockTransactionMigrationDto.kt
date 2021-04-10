@@ -93,6 +93,12 @@ data class StockTransactionMigrationDto(
          * Stock taking
          */
         @SerialName("stockTaking")
-        STOCK_TAKING
+        STOCK_TAKING,
+
+        /**
+         * Return
+         */
+        @SerialName("return")
+        RETURN,
     }
 }
