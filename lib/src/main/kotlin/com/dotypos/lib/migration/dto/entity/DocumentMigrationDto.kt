@@ -239,7 +239,7 @@ data class DocumentMigrationDto(
     @Serializable
     enum class Type(
         val isInvoice: Boolean,
-        val isCancellation: Boolean
+        val isCancellation: Boolean,
     ) {
         /**
          * Receipt
@@ -320,7 +320,7 @@ data class DocumentMigrationDto(
          * Accuracy in meters of acquired location
          */
         @SerialName("accuracy")
-        val accuracy: Float
+        val accuracy: Float,
     ) {
         init {
             validationOf(Location::latitude)

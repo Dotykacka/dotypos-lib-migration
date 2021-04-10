@@ -22,7 +22,7 @@ import java.util.*
  * Billing documents in Markeeta.
  */
 @Serializable
-data class DocumentMarkeetaMigrationDto (
+data class DocumentMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 
@@ -113,7 +113,7 @@ data class DocumentMarkeetaMigrationDto (
      * Info about document of type PAYMENT_SCHEDULE.
      */
     @Serializable
-    data class PaymentSchedule (
+    data class PaymentSchedule(
         /**
          * Number of payments (in months) of the payment schedule.
          */
@@ -170,5 +170,5 @@ data class DocumentMarkeetaMigrationDto (
          */
         @SerialName("terminalIdMarkeeta")
         val terminalIdMarkeeta: Long?,
-    ): WithCurrency
+    ) : WithCurrency
 }

@@ -123,7 +123,7 @@ data class PrinterMigrationDto(
             id: Long,
             name: String,
             tasks: List<PrintTaskMigrationDto>,
-            version: Long
+            version: Long,
         ) = PrinterMigrationDto(
             id = id,
             name = name,
@@ -152,7 +152,7 @@ data class PrinterMigrationDto(
             id: Long,
             name: String,
             tasks: List<PrintTaskMigrationDto>,
-            version: Long
+            version: Long,
         ) = PrinterMigrationDto(
             id = id,
             name = name,
@@ -181,7 +181,7 @@ data class PrinterMigrationDto(
             id: Long,
             name: String,
             tasks: List<PrintTaskMigrationDto>,
-            version: Long
+            version: Long,
         ) = PrinterMigrationDto(
             id = id,
             name = name,

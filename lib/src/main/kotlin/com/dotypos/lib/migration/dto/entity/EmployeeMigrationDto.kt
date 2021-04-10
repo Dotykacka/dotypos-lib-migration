@@ -119,7 +119,7 @@ data class EmployeeMigrationDto(
          * Raw password data
          */
         @SerialName("data")
-        val data: String
+        val data: String,
     ) {
         @Serializable
         enum class Type {

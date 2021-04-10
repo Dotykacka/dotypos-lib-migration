@@ -6,6 +6,6 @@ open class Relation() : ValidationConstraint() {
     override val description = "no relation to parent found"
 }
 
-class RelationToEntity(): Relation() {
+class RelationToEntity() : Relation() {
     override val description = "no relation to entity found"
 }

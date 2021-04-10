@@ -60,7 +60,7 @@ data class StockTransactionMigrationDto(
     val created: Date,
 
     @SerialName(WithVersion.SERIAL_NAME)
-    override val version: Long
+    override val version: Long,
 ) : BaseEntityDto() {
 
     init {

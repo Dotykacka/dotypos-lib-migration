@@ -155,7 +155,7 @@ data class MoneyOperationMigrationDto(
          * Transaction code if available
          */
         @SerialName("transactionCode")
-        val transactionCode: String = DEFAULT_TRANSACTION_CODE
+        val transactionCode: String = DEFAULT_TRANSACTION_CODE,
     ) {
 
         init {

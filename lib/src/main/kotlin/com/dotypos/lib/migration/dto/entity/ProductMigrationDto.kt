@@ -205,7 +205,7 @@ data class ProductMigrationDto(
         val packaging: BigDecimal,
 
         @SerialName(WithMeasurementUnit.SERIAL_NAME)
-        override val measurementUnit: MigrationMeasurementUnit
+        override val measurementUnit: MigrationMeasurementUnit,
     ) : WithMeasurementUnit
 }
 

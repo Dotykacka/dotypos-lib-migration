@@ -66,7 +66,7 @@ data class PrintTaskMigrationDto(
     val filters: List<TagItemPrintFilter>,
 
     @SerialName(WithVersion.SERIAL_NAME)
-    override val version: Long
+    override val version: Long,
 ) : BaseEntityDto() {
 
     init {
@@ -92,6 +92,6 @@ data class PrintTaskMigrationDto(
          * Sets inclusive/exclusive behavior of the filter.
          */
         @SerialName("include")
-        val include: Boolean = true
+        val include: Boolean = true,
     )
 }

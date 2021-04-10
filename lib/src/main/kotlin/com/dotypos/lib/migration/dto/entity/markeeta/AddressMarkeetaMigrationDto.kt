@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * Address for Markeeta company.
  */
 @Serializable
-data class AddressMarkeetaMigrationDto (
+data class AddressMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 

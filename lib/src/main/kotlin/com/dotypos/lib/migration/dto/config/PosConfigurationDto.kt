@@ -185,7 +185,7 @@ data class PosConfigurationDto(
          * Number of decimal digits used for rounding of bill
          */
         @SerialName("total")
-        val total: Int
+        val total: Int,
     )
 
     @Serializable

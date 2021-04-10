@@ -84,7 +84,7 @@ data class TableMigrationDto(
     enum class TableType(
         val width: Int,
         val height: Int,
-        val defaultSeats: Int
+        val defaultSeats: Int,
     ) {
         /**
          * Square table by default with 4 seats

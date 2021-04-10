@@ -21,7 +21,7 @@ import java.util.*
  * Additional payable services for company in Markeeta.
  */
 @Serializable
-data class ServiceMarkeetaMigrationDto (
+data class ServiceMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 

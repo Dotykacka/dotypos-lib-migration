@@ -17,7 +17,7 @@ import java.util.*
  * Data about company from public company register.
  */
 @Serializable
-data class RegisterMarkeetaMigrationDto (
+data class RegisterMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 

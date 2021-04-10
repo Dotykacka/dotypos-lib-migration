@@ -16,7 +16,7 @@ import java.util.*
  * Company person.
  */
 @Serializable
-data class PersonMarkeetaMigrationDto (
+data class PersonMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 

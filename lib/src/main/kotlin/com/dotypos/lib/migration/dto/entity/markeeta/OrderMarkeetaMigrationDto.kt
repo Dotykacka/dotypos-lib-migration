@@ -17,7 +17,7 @@ import java.util.*
  * Orders in Markeeta.
  */
 @Serializable
-data class OrderMarkeetaMigrationDto (
+data class OrderMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 

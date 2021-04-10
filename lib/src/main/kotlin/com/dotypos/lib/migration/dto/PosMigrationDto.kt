@@ -270,7 +270,7 @@ data class PosMigrationDto(
          * Markeeta: shopId/terminalId
          */
         @SerialName("id")
-        val id: String
+        val id: String,
     ) {
         init {
             validationOf(PosMetadata::id).isNotBlank()

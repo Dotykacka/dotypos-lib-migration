@@ -19,7 +19,7 @@ import java.util.*
  * Markeeta license.
  */
 @Serializable
-data class LicenseMarkeetaMigrationDto (
+data class LicenseMarkeetaMigrationDto(
     @SerialName(WithId.SERIAL_NAME)
     override val id: Long,
 
@@ -100,7 +100,7 @@ data class LicenseMarkeetaMigrationDto (
      * Data about partner, who is paid provisions by license.
      */
     @Serializable
-    data class CommissionPartner (
+    data class CommissionPartner(
         @SerialName(WithName.SERIAL_NAME)
         override val name: String,
 

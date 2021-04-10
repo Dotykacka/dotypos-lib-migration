@@ -26,7 +26,7 @@ fun <T : BaseEntityDto> PropertyValidationContext<*, out Collection<T>>.hasUniqu
 fun <T : Any, P : BaseEntityDto> PropertyValidationContext<*, out Iterable<T>>.validateRelationsTo(
     entitiesParent: Any? = parent,
     key: KProperty<Long?>,
-    entities: KProperty<Iterable<P>>
+    entities: KProperty<Iterable<P>>,
 ) = customValidation {
     val entityIds = entities.getter
         .also { it.isAccessible = true }

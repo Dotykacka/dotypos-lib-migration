@@ -11,7 +11,7 @@ class MissingRelatedEntityValidationError(
     val relatedPropertyName: String,
     val relatedPropertyKeyName: String,
     val values: Iterable<Any>,
-    val keys: Iterable<Any>
+    val keys: Iterable<Any>,
 ) : ValidationError(
     message = run {
         val fullPropertyName = "${propertyParent?.javaClass?.simpleName}.$propertyName[].${keyName}"
