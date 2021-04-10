@@ -1,5 +1,5 @@
 package com.dotypos.validator.constraint
 
-abstract class ValidationConstraint {
-    abstract val description: String
+public abstract class ValidationConstraint {
+    public abstract val description: String
 }

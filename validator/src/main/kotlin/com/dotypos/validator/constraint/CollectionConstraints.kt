@@ -1,23 +1,23 @@
 package com.dotypos.validator.constraint
 
-object Empty : ValidationConstraint() {
-    override val description = "is not empty"
+public object Empty : ValidationConstraint() {
+    override val description: String = "is not empty"
 }
 
-object NotEmpty : ValidationConstraint() {
-    override val description = "is empty"
+public object NotEmpty : ValidationConstraint() {
+    override val description: String = "is empty"
 }
 
-object Contains: ValidationConstraint() {
-    override val description = "does not contain"
+public object Contains: ValidationConstraint() {
+    override val description: String = "does not contain"
 }
 
-object NotContains: ValidationConstraint() {
-    override val description = "contains"
+public object NotContains: ValidationConstraint() {
+    public override val description: String = "contains"
 }
 
 
-data class Size(
+public data class Size(
     val type: String = "size",
     val min: Int = Int.MIN_VALUE,
     val max: Int = Int.MAX_VALUE,

@@ -26,6 +26,10 @@ java {
     withJavadocJar()
 }
 
+kotlin {
+    explicitApi()
+}
+
 tasks.jar {
     manifest {
         attributes(

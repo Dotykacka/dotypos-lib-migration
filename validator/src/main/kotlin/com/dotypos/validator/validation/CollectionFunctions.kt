@@ -9,14 +9,15 @@ import com.dotypos.validator.isValid
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
-fun <T, V, P> PropertyValidationContext<T, out Collection<V>>.hasUnique(childProperty: KProperty<P>): PropertyValidationContext<T, out Collection<V>> {
+public fun <T, V, P> PropertyValidationContext<T, out Collection<V>>.hasUnique(
+    childProperty: KProperty<P>,
+): PropertyValidationContext<T, out Collection<V>> {
     val getter = childProperty.getter
     getter.isAccessible = true
     val existingValues = mutableMapOf<P, V>()
     value.forEachIndexed { index, it ->
         val childPropertyValue = getter.call(it)
         if (existingValues.containsKey(childPropertyValue)) {
-            val otherValue = existingValues[childPropertyValue]
             setError(
                 UniqueConstraintValidationError(
                     parent = parent,
@@ -33,7 +34,7 @@ fun <T, V, P> PropertyValidationContext<T, out Collection<V>>.hasUnique(childPro
     return this
 }
 
-fun <T, P1, P2 : Collection<P1>> DualPropertyValidationContext<T, P1, P2>.contains() =
+public fun <T, P1, P2 : Collection<P1>> DualPropertyValidationContext<T, P1, P2>.contains(): DualPropertyValidationContext<T, P1, P2> =
     isValid(Contains) {
         true
     }

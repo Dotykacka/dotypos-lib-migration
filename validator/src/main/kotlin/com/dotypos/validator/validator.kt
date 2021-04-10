@@ -5,15 +5,19 @@ import com.dotypos.validator.context.DualPropertyValidationContext
 import com.dotypos.validator.context.PropertyValidationContext
 import kotlin.reflect.KProperty
 
-fun <T, P> T.validationOf(property: KProperty<P>, action: PropertyValidationContext<T, P>.() -> Unit = {}) =
+public fun <T, P> T.validationOf(
+    property: KProperty<P>,
+    action: PropertyValidationContext<T, P>.() -> Unit = {},
+): PropertyValidationContext<T, P> =
     PropertyValidationContext(this, property).also(action)
 
-fun <T, P1, P2> T.validationOf(
+public fun <T, P1, P2> T.validationOf(
     property1: KProperty<P1>, property2: KProperty<P2>,
-    action: DualPropertyValidationContext<T, P1, P2>.() -> Unit = {}
-) = DualPropertyValidationContext(this, property1, property2).also(action)
+    action: DualPropertyValidationContext<T, P1, P2>.() -> Unit = {},
+): DualPropertyValidationContext<T, P1, P2> =
+    DualPropertyValidationContext(this, property1, property2).also(action)
 
-fun <T, P> PropertyValidationContext<T, P>.isValid(
+public fun <T, P> PropertyValidationContext<T, P>.isValid(
     constraint: ValidationConstraint,
     message: ((value: P) -> String?)? = null,
     validation: T.(value: P) -> Boolean,
@@ -24,7 +28,7 @@ fun <T, P> PropertyValidationContext<T, P>.isValid(
     return this
 }
 
-fun <T, P1, P2> DualPropertyValidationContext<T, P1, P2>.isValid(
+public fun <T, P1, P2> DualPropertyValidationContext<T, P1, P2>.isValid(
     constraint: ValidationConstraint,
     message: ((value: Pair<P1, P2>) -> String?)? = null,
     validation: T.(value: Pair<P1, P2>) -> Boolean,

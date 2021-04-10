@@ -1,14 +1,14 @@
 package com.dotypos.validator.constraint
 
-object Blank : ValidationConstraint() {
-    override val description = "is blank"
+public object Blank : ValidationConstraint() {
+    override val description: String = "is blank"
 }
 
-object NotBlank : ValidationConstraint() {
-    override val description = "is not blank"
+public object NotBlank : ValidationConstraint() {
+    override val description: String = "is not blank"
 }
 
-class HexColor(private val withLeadingHash: Boolean) : ValidationConstraint() {
+public class HexColor(private val withLeadingHash: Boolean) : ValidationConstraint() {
     override val description: String
         get() = if (withLeadingHash) {
             "is not hex color (with leading '#')"
@@ -17,25 +17,25 @@ class HexColor(private val withLeadingHash: Boolean) : ValidationConstraint() {
         }
 }
 
-object Currency : ValidationConstraint() {
+public object Currency : ValidationConstraint() {
     override val description: String
         get() = "is not valid currency"
 }
 
-object Country : ValidationConstraint() {
+public object Country : ValidationConstraint() {
     override val description: String
         get() = "is not valid country"
 }
 
-object Base64Text : ValidationConstraint() {
+public object Base64Text : ValidationConstraint() {
     override val description: String
         get() = "is not valid base64 encoded string"
 }
 
-class Matches(val regex: Regex) : ValidationConstraint() {
-    override val description = "does not match pattern ${regex.pattern}"
+public class Matches(private val regex: Regex) : ValidationConstraint() {
+    override val description: String = "does not match pattern ${regex.pattern}"
 }
 
-class NotMatch(val regex: Regex) : ValidationConstraint() {
-    override val description = "matches pattern ${regex.pattern}"
+public class NotMatch(private val regex: Regex) : ValidationConstraint() {
+    override val description: String = "matches pattern ${regex.pattern}"
 }

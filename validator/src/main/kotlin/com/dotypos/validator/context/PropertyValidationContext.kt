@@ -7,17 +7,17 @@ import com.dotypos.validator.constraint.ValidationConstraint
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
-class PropertyValidationContext<T, P>(
-    val parent: T,
-    val property: KProperty<P>
+public class PropertyValidationContext<T, P>(
+    public val parent: T,
+    public val property: KProperty<P>
 ) {
-    val value: P
+    public val value: P
         get() {
             property.isAccessible = true
             return property.getter.call(parent)
         }
 
-    fun setError(error: ValidationError) {
+    public fun setError(error: ValidationError) {
         if (ErrorCollector.active) {
             ErrorCollector += error
         } else {
@@ -25,7 +25,7 @@ class PropertyValidationContext<T, P>(
         }
     }
 
-    fun simpleValidationError(constraint: ValidationConstraint, explanation: String? = null) {
+    public fun simpleValidationError(constraint: ValidationConstraint, explanation: String? = null) {
         SimpleConstraintValidationError(
             parent = parent,
             propertyName = property.name,
@@ -35,7 +35,7 @@ class PropertyValidationContext<T, P>(
         ).also(::setError)
     }
 
-    fun customValidation(validation: PropertyValidationContext<T, P>.() -> Unit): PropertyValidationContext<T, P> {
+    public fun customValidation(validation: PropertyValidationContext<T, P>.() -> Unit): PropertyValidationContext<T, P> {
         try {
             validation()
         } catch (e: ValidationError) {

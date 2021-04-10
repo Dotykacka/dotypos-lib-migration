@@ -7,19 +7,19 @@ import com.dotypos.validator.constraint.ValidationConstraint
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
-class DualPropertyValidationContext<T, P1, P2>(
-    val parent: T,
-    val property1: KProperty<P1>,
-    val property2: KProperty<P2>,
+public class DualPropertyValidationContext<T, P1, P2>(
+    public val parent: T,
+    public val property1: KProperty<P1>,
+    public val property2: KProperty<P2>,
 ) {
-    val value: Pair<P1, P2>
+    public val value: Pair<P1, P2>
         get() {
             property1.isAccessible = true
             property2.isAccessible = true
             return property1.getter.call(parent) to property2.getter.call(parent)
         }
 
-    fun setError(error: ValidationError) {
+    public fun setError(error: ValidationError) {
         if (ErrorCollector.active) {
             ErrorCollector += error
         } else {
@@ -27,7 +27,7 @@ class DualPropertyValidationContext<T, P1, P2>(
         }
     }
 
-    fun simpleValidationError(constraint: ValidationConstraint, explanation: String? = null) {
+    public fun simpleValidationError(constraint: ValidationConstraint, explanation: String? = null) {
         SimpleDualConstraintValidationError(
             parent = parent,
             property1Name = property1.name,

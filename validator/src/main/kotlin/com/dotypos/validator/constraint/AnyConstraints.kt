@@ -1,11 +1,11 @@
 package com.dotypos.validator.constraint
 
-object EqualsDual : ValidationConstraint() {
+public object EqualsDual : ValidationConstraint() {
     override val description: String
         get() = "not equals"
 }
 
-object NotEqualsDual : ValidationConstraint() {
+public object NotEqualsDual : ValidationConstraint() {
     override val description: String
         get() = "equals"
 }
