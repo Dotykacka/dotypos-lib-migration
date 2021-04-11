@@ -1,18 +1,18 @@
 package com.dotypos.validator.constraint
 
-public data class Less<T>(val value:T) : ValidationConstraint() {
+public data class Less<T>(val value: T) : ValidationConstraint() {
     override val description: String = "is not less than $value"
 }
 
-public data class LessOrEqual<T>(val value:T) : ValidationConstraint() {
+public data class LessOrEqual<T>(val value: T) : ValidationConstraint() {
     override val description: String = "is not less or equal to $value"
 }
 
-public data class Greater<T>(val value:T) : ValidationConstraint() {
+public data class Greater<T>(val value: T) : ValidationConstraint() {
     override val description: String = "is not greater than $value"
 }
 
-public data class GreaterOrEqual<T>(val value:T) : ValidationConstraint() {
+public data class GreaterOrEqual<T>(val value: T) : ValidationConstraint() {
     override val description: String = "is not greater or equal to $value"
 }
 

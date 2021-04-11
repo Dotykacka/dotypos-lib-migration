@@ -20,8 +20,14 @@ public fun <T, P : Comparable<P>> PropertyValidationContext<T, P>.isLessThanOrEq
  * @param start inclusive
  * @param end inclusive
  */
-public fun <T, P : Comparable<P>> PropertyValidationContext<T, P>.isBetween(start: P, end: P): PropertyValidationContext<T, P> =
+public fun <T, P : Comparable<P>> PropertyValidationContext<T, P>.isBetween(
+    start: P,
+    end: P,
+): PropertyValidationContext<T, P> =
     isValid(Between(start, end)) { it in start..end }
 
-public fun <T, P : Comparable<P>> PropertyValidationContext<T, P?>.isBetweenOrNull(start: P, end: P): PropertyValidationContext<T, P?> =
+public fun <T, P : Comparable<P>> PropertyValidationContext<T, P?>.isBetweenOrNull(
+    start: P,
+    end: P,
+): PropertyValidationContext<T, P?> =
     isValid(Between(start, end)) { it == null || it in start..end }

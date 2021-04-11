@@ -8,11 +8,11 @@ public object NotEmpty : ValidationConstraint() {
     override val description: String = "is empty"
 }
 
-public object Contains: ValidationConstraint() {
+public object Contains : ValidationConstraint() {
     override val description: String = "does not contain"
 }
 
-public object NotContains: ValidationConstraint() {
+public object NotContains : ValidationConstraint() {
     public override val description: String = "contains"
 }
 

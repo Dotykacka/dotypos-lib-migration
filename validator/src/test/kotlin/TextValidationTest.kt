@@ -86,7 +86,8 @@ class TextValidationTest {
         fun `Validate RGB color without hash`() {
             // Valid
             assertDoesNotThrow {
-                WrapperObject(text = "AABB22").validationOf(WrapperObject::text).isValidColor(requireLeadingHash = false)
+                WrapperObject(text = "AABB22").validationOf(WrapperObject::text)
+                    .isValidColor(requireLeadingHash = false)
             }
         }
 
@@ -94,7 +95,8 @@ class TextValidationTest {
         fun `Validate ARGB color without hash`() {
             // Valid
             assertDoesNotThrow {
-                WrapperObject(text = "FFAABB22").validationOf(WrapperObject::text).isValidColor(requireLeadingHash = false)
+                WrapperObject(text = "FFAABB22").validationOf(WrapperObject::text)
+                    .isValidColor(requireLeadingHash = false)
             }
         }
 

@@ -9,7 +9,7 @@ import kotlin.reflect.jvm.isAccessible
 
 public class PropertyValidationContext<T, P>(
     public val parent: T,
-    public val property: KProperty<P>
+    public val property: KProperty<P>,
 ) {
     public val value: P
         get() {
