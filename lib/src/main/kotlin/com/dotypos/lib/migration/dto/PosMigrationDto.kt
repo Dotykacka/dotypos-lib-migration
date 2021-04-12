@@ -111,6 +111,12 @@ data class PosMigrationDto(
     val printers: List<PrinterMigrationDto>,
 
     /**
+     * List of stock transactions (in terms of POS migration = single STOCK_TAKING transaction connected to all operations)
+     */
+    @SerialName("stockTransactions")
+    val stockTransactions: List<StockTransactionMigrationDto> = emptyList(),
+
+    /**
      * List of all stock operations - only stock taking records expected
      */
     @SerialName("stockOperations")
@@ -187,8 +193,15 @@ data class PosMigrationDto(
             .hasUniqueItemIds()
         // TODO: PrintTask uniqueness
 
+        validationOf(PosMigrationDto::stockTransactions)
+            .hasUniqueItemIds()
+
         validationOf(PosMigrationDto::stockOperations)
             .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = StockOperationMigrationDto::stockTransactionId,
+                entities = PosMigrationDto::stockTransactions,
+            )
             .validateRelationsTo(
                 key = StockOperationMigrationDto::productId,
                 entities = PosMigrationDto::products,

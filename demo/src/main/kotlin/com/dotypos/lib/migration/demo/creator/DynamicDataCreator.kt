@@ -44,6 +44,8 @@ class DynamicDataCreator(
     private val printers: Int = 1,
     private val documents: Int = 20_000,
     private val withEet: Boolean = true,
+    private val posStockTransactions: Int = 1,
+    private val posStockOperations: Int = 100,
 ) : PosDataCreator, CloudDataCreator {
 
     private val fakerConfig = FakerConfig.builder().create {
@@ -65,6 +67,8 @@ class DynamicDataCreator(
     private val warehouseList by randomList(warehouses, ::createWarehouse)
     private val supplierList by randomList(suppliers, ::createSupplier)
     private val printerList by randomList(printers, ::createPrinter)
+    private val posStockTransactionsList by randomList(posStockTransactions, ::createTransaction)
+    private val posStockOperationsList by randomList(posStockOperations, ::createOperation)
 
     private val czFiscalizationConfigurations by randomList(1, ::createCzFiscalizationConfiguration)
 
@@ -137,6 +141,8 @@ class DynamicDataCreator(
             warehouses = warehouseList,
             suppliers = supplierList,
             printers = printerList,
+            stockTransactions = posStockTransactionsList,
+            stockOperations = posStockOperationsList,
         )
     }
 
@@ -744,6 +750,44 @@ class DynamicDataCreator(
         isDeleted = false,
         version = System.currentTimeMillis(),
     )
+
+    private fun createTransaction(id: Long, random: Random): StockTransactionMigrationDto {
+        return StockTransactionMigrationDto(
+            id = id,
+            warehouseId = warehouseList.random(random).id,
+            supplierId = supplierList.random(random).id,
+            invoiceNumber = null,
+            type = StockTransactionMigrationDto.Type.STOCK_TAKING,
+            note = "",
+            created = Date(),
+            version = System.currentTimeMillis(),
+        )
+    }
+
+    private fun createOperation(id: Long, random: Random): StockOperationMigrationDto {
+        val transaction = posStockTransactionsList.random(random)
+        val product = productList.random(random)
+        return StockOperationMigrationDto(
+            id = id,
+            stockTransactionId = transaction.id,
+            productId = product.id,
+            warehouseId = transaction.warehouseId,
+            employeeId = employeesList.random(random).id,
+            sellerId = null, // TODO
+            documentId = null,
+            quantity = random.nextBigDecimal(0, 100),
+            quantityStatus = random.nextBigDecimal(3, 40),
+            measurementUnit = product.measurementUnit,
+            purchasePrice = product.unitPriceWithVat * BigDecimal("0.8"),
+            avgPurchasePrice = product.unitPriceWithVat * BigDecimal("0.8"),
+            currency = "CZK",
+            note = random.valueOrNull(occurence = 4) {
+                randomLorem(random.nextInt(4, 10))
+            } ?: "",
+            type = StockOperationMigrationDto.Type.STOCK_TAKING,
+            version = System.currentTimeMillis(),
+        )
+    }
 
     private fun createCzFiscalizationConfiguration(id: Long, random: Random): CzFiscalizationConfiguration {
         val keystoreName = eetKeystores.keys.random()

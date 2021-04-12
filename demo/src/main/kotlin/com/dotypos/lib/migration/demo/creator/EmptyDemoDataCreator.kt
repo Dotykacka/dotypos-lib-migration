@@ -59,6 +59,7 @@ object EmptyDemoDataCreator : PosDataCreator, CloudDataCreator {
         warehouses = emptyList(),
         suppliers = emptyList(),
         printers = emptyList(),
+        stockTransactions = emptyList(),
         stockOperations = emptyList(),
     )
 
