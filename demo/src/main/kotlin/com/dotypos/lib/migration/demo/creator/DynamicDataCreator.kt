@@ -64,7 +64,7 @@ class DynamicDataCreator(
     private val courseList by randomList(courses, ::createCourse)
     private val tablePageList by randomList(tablePages, ::createTablePage)
     private val tableList by randomList(tables, ::createTable)
-    private val warehouseList by randomList(warehouses, ::createWarehouse)
+    private val warehouseList by randomList(warehouses, ::createWarehouse) { index, _ -> index.toLong() + 1 }
     private val supplierList by randomList(suppliers, ::createSupplier)
     private val printerList by randomList(printers, ::createPrinter)
     private val posStockTransactionsList by randomList(posStockTransactions, ::createTransaction)
@@ -807,9 +807,15 @@ class DynamicDataCreator(
         )
     }
 
-    private fun <T> randomList(numberOfRecords: Int, factory: (id: Long, random: Random) -> T) = lazy {
+    private fun <T> randomList(
+        numberOfRecords: Int,
+        factory: (id: Long, random: Random) -> T,
+        createId: (index: Int, random: Random) -> Long = { index, _ -> index.toLong() },
+    ) = lazy {
         val random = Random(seed)
-        List(numberOfRecords) { id -> factory(id.toLong(), random) }
+        List(numberOfRecords) { index ->
+            factory(createId(index, random), random)
+        }
     }
 
     private fun randomLorem(words: Int) = List(words) { faker.lorem.words() }.joinToString(separator = " ")
