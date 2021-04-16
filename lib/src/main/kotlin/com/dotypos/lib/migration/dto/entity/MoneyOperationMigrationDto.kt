@@ -118,8 +118,14 @@ data class MoneyOperationMigrationDto(
         @SerialName("registerOpen")
         REGISTER_OPEN,
 
+        @SerialName("registerOpenSecondary")
+        REGISTER_OPEN_SECONDARY,
+
         @SerialName("registerClose")
         REGISTER_CLOSE,
+
+        @SerialName("registerCloseSecondary")
+        REGISTER_CLOSE_SECONDARY,
 
         @SerialName("cashIn")
         CASH_IN,
