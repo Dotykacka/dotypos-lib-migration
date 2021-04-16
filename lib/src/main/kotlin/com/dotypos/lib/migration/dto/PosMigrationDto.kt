@@ -111,6 +111,12 @@ data class PosMigrationDto(
     val printers: List<PrinterMigrationDto>,
 
     /**
+     * List of all money operations (primarily last register closure)
+     */
+    @SerialName("moneyOperations")
+    val moneyOperations: List<MoneyOperationMigrationDto> = emptyList(),
+
+    /**
      * List of stock transactions (in terms of POS migration = single STOCK_TAKING transaction connected to all operations)
      */
     @SerialName("stockTransactions")
