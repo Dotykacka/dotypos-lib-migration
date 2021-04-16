@@ -781,7 +781,7 @@ class DynamicDataCreator(
                 version = now.time,
             ),
             MoneyOperationMigrationDto(
-                id = 0,
+                id = 1,
                 sellerId = null,
                 employeeId = employeeId,
                 documentId = null,
