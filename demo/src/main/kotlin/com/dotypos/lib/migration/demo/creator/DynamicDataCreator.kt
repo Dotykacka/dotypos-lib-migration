@@ -67,6 +67,7 @@ class DynamicDataCreator(
     private val warehouseList by randomList(warehouses, ::createWarehouse) { index, _ -> index.toLong() + 1 }
     private val supplierList by randomList(suppliers, ::createSupplier)
     private val printerList by randomList(printers, ::createPrinter)
+    private val posMoneyOperationsList by lazy { createPosMoneyOperations() }
     private val posStockTransactionsList by randomList(posStockTransactions, ::createTransaction)
     private val posStockOperationsList by randomList(posStockOperations, ::createOperation)
 
@@ -141,6 +142,7 @@ class DynamicDataCreator(
             warehouses = warehouseList,
             suppliers = supplierList,
             printers = printerList,
+            moneyOperations = posMoneyOperationsList,
             stockTransactions = posStockTransactionsList,
             stockOperations = posStockOperationsList,
         )
@@ -750,6 +752,53 @@ class DynamicDataCreator(
         isDeleted = false,
         version = System.currentTimeMillis(),
     )
+
+    private fun createPosMoneyOperations(): List<MoneyOperationMigrationDto> {
+        val random = Random(seed)
+        val employeeId = employeesList.randomOrNull(random)?.id
+            ?: throw IllegalStateException("No employee found")
+        // Create register close only
+        val now = Date()
+        val primaryAmount = random.nextBigDecimal(0, 20000)
+        val secondaryAmount = random.nextBigDecimal(1, 200)
+        val exchangeRate = BigDecimal("23.43")
+        return listOf(
+            MoneyOperationMigrationDto(
+                id = 0,
+                sellerId = null,
+                employeeId = employeeId,
+                documentId = null,
+                type = MoneyOperationMigrationDto.Type.REGISTER_CLOSE,
+                paymentMethod = PaymentMethod.CASH,
+                primaryAmount = primaryAmount,
+                amount = primaryAmount,
+                currency = "CZK",
+                exchangeRate = BigDecimal.ONE,
+                note = "Open (primary)",
+                created = now,
+                cardPaymentData = null,
+                tags = emptyList(),
+                version = now.time,
+            ),
+            MoneyOperationMigrationDto(
+                id = 0,
+                sellerId = null,
+                employeeId = employeeId,
+                documentId = null,
+                type = MoneyOperationMigrationDto.Type.REGISTER_CLOSE_SECONDARY,
+                paymentMethod = PaymentMethod.CASH,
+                primaryAmount = secondaryAmount * exchangeRate,
+                amount = secondaryAmount,
+                currency = "EUR",
+                exchangeRate = exchangeRate,
+                note = "Open (secondary)",
+                created = now,
+                cardPaymentData = null,
+                tags = emptyList(),
+                version = now.time,
+            ),
+        )
+    }
 
     private fun createTransaction(id: Long, random: Random): StockTransactionMigrationDto {
         return StockTransactionMigrationDto(
