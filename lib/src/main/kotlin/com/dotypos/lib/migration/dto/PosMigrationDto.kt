@@ -199,6 +199,13 @@ data class PosMigrationDto(
             .hasUniqueItemIds()
         // TODO: PrintTask uniqueness
 
+        validationOf(PosMigrationDto::moneyOperations)
+            .hasUniqueItemIds()
+            .validateRelationsTo(
+                key = MoneyOperationMigrationDto::employeeId,
+                entities = PosMigrationDto::employees,
+            )
+
         validationOf(PosMigrationDto::stockTransactions)
             .hasUniqueItemIds()
 

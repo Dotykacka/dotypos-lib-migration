@@ -13,6 +13,7 @@ import com.dotypos.lib.migration.dto.validation.validateVersion
 import com.dotypos.lib.migration.serialization.BigDecimalSerializer
 import com.dotypos.lib.migration.serialization.DateSerializer
 import com.dotypos.validator.validation.hasSize
+import com.dotypos.validator.validation.isGreaterThan
 import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -103,6 +104,7 @@ data class MoneyOperationMigrationDto(
     init {
         validateId()
         validateCurrency()
+        validationOf(MoneyOperationMigrationDto::exchangeRate).isGreaterThan(BigDecimal.ZERO)
         validationOf(MoneyOperationMigrationDto::note).hasSize(max = 1000)
         validateVersion()
     }
