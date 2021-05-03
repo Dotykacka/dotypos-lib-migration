@@ -1,14 +1,24 @@
+@file:UseSerializers(
+    BigDecimalSerializer::class,
+    DateSerializer::class,
+    RetentionPeriodSerializer::class,
+)
+
 package com.dotypos.lib.migration.dto.config
 
 import com.dotypos.lib.migration.dto.config.PosConfigurationDto.DocumentNumberingConfiguration.Companion.NUMBERING_FORMAT_REGEX
 import com.dotypos.lib.migration.dto.entity.iface.WithCountry
 import com.dotypos.lib.migration.dto.entity.iface.WithName
 import com.dotypos.lib.migration.dto.enumerate.PaymentMethod
+import com.dotypos.lib.migration.serialization.BigDecimalSerializer
+import com.dotypos.lib.migration.serialization.DateSerializer
+import com.dotypos.lib.migration.serialization.RetentionPeriodSerializer
 import com.dotypos.validator.validation.matches
 import com.dotypos.validator.validation.matchesOrNull
 import com.dotypos.validator.validationOf
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class PosConfigurationDto(
@@ -144,6 +154,9 @@ data class PosConfigurationDto(
      */
     @SerialName("defaultWarehouseId")
     val defaultWarehouseId: Long,
+
+    @SerialName("retentionPeriod")
+    val retentionPeriod: RetentionPeriod = RetentionPeriod.DEFAULT_RETENTION_PERIOD,
 ) : WithName, WithCountry {
 
     @Serializable
