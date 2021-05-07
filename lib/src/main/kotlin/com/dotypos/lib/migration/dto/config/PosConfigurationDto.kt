@@ -266,7 +266,7 @@ data class PosConfigurationDto(
         }
 
         companion object {
-            val NUMBERING_FORMAT_REGEX = Regex("(([0-9a-zA-Z.,:;/#\\-_ ]|%[dmyY])*)@([0-9]+)")
+            val NUMBERING_FORMAT_REGEX = Regex("(([0-9a-zA-Z.,:;/#\\-_ ]|%[dmyY])*)@([5-9]|[1-9][0-9]+)")
 
             private fun createNumberingFormatValidationRegex(format: String): Regex {
                 val (prefix, counterDigits) = format.split("@")
