@@ -372,7 +372,7 @@ data class DocumentMigrationDto(
         val saleRegime: SaleRegime,
 
         /**
-         * Fiscal Identification Code, at least on of [fik]/[bkp] must be presented
+         * Fiscal Identification Code, at least one of [fik]/[bkp] must be presented
          */
         @SerialName("fik")
         val fik: String?,
@@ -384,7 +384,7 @@ data class DocumentMigrationDto(
         val pkp: String,
 
         /**
-         * Taxpayer's Security Code (bkp), at least on of [fik]/[bkp] must be presented
+         * Taxpayer's Security Code (bkp), at leaste on of [fik]/[bkp] must be presented
          */
         @SerialName("bkp")
         val bkp: String?,
