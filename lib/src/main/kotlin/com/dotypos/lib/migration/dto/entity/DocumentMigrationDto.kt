@@ -196,7 +196,7 @@ data class DocumentMigrationDto(
      * Plaintext of additional print data for merchant - used for printing receipt from payment terminal. New lines separated by `\n`
      */
     @SerialName("merchantPrintData")
-    val merchantPrintData: String,
+    val merchantPrintData: String = "",
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
