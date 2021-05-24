@@ -187,10 +187,16 @@ data class DocumentMigrationDto(
     val welmecMode: Boolean,
 
     /**
-     * Plaintext of additional print data - used for printing receipt from payment terminal. New lines separated by `\n`
+     * Plaintext of additional print data for customer - used for printing receipt from payment terminal. New lines separated by `\n`
      */
     @SerialName("printData")
     val printData: String,
+
+    /**
+     * Plaintext of additional print data for merchant - used for printing receipt from payment terminal. New lines separated by `\n`
+     */
+    @SerialName("merchantPrintData")
+    val merchantPrintData: String,
 
     @SerialName(WithVersion.SERIAL_NAME)
     override val version: Long,
