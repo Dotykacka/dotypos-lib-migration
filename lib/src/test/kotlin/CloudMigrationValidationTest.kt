@@ -84,6 +84,7 @@ class CloudMigrationValidationTest {
             printWithLunchInvitation = false,
             welmecMode = false,
             printData = "",
+            merchantPrintData = "",
             version = System.currentTimeMillis(),
         )
 

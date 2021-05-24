@@ -382,6 +382,9 @@ class DynamicDataCreator(
                 printData = random.valueOrDefault(3, "") {
                     randomLorem(30)
                 },
+                merchantPrintData = random.valueOrDefault(3, "") {
+                    randomLorem(30)
+                },
                 version = System.currentTimeMillis()
             )
             created += random.nextLong(5 * 60_000, 120 * 60_000)
