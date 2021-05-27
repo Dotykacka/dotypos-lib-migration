@@ -115,5 +115,35 @@ data class TableMigrationDto(
          */
         @SerialName("delivery")
         DELIVERY(width = 104, height = 68, defaultSeats = 0),
+
+        /**
+         * Door table - for hotels and accommodations
+         */
+        @SerialName("door")
+        DOOR(width = 68, height = 68, defaultSeats = 1),
+
+        /**
+         * Chair table - for hair salons
+         */
+        @SerialName("chair")
+        CHAIR(width = 68, height = 68, defaultSeats = 1),
+
+        /**
+         * Car table - for car and tyre repair shops
+         */
+        @SerialName("car1")
+        CAR1(width = 104, height = 68, defaultSeats = 1),
+
+        /**
+         * Car table - for car and tyre repair shops, second design
+         */
+        @SerialName("car2")
+        CAR2(width = 104, height = 68, defaultSeats = 1),
+
+        /**
+         * Generic table
+         */
+        @SerialName("generic")
+        GENERIC(width = 68, height = 68, defaultSeats = 4),
     }
 }
